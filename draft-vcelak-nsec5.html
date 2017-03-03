@@ -1,0 +1,1582 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>NSEC5, DNSSEC Authenticated Denial of Existence</title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+      a.info {
+          /* This is the key. */
+          position: relative;
+          z-index: 24;
+          text-decoration: none;
+      }
+      a.info:hover {
+          z-index: 25;
+          color: #FFF; background-color: #900;
+      }
+      a.info span { display: none; }
+      a.info:hover span.info {
+          /* The span will display just on :hover state. */
+          display: block;
+          position: absolute;
+          font-size: smaller;
+          top: 2em; left: -5em; width: 15em;
+          padding: 2px; border: 1px solid #333;
+          color: #900; background-color: #EEE;
+          text-align: left;
+      }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  max-width: 55em;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+
+  <link href="#rfc.toc" rel="Contents"/>
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Rationale"/>
+<link href="#rfc.section.1.2" rel="Chapter" title="1.2 Requirements"/>
+<link href="#rfc.section.1.3" rel="Chapter" title="1.3 Terminology"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 Backward Compatibility"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 How NSEC5 Works"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 NSEC5 Algorithms"/>
+<link href="#rfc.section.5" rel="Chapter" title="5 The NSEC5KEY Resource Record"/>
+<link href="#rfc.section.5.1" rel="Chapter" title="5.1 NSEC5KEY RDATA Wire Format"/>
+<link href="#rfc.section.5.2" rel="Chapter" title="5.2 NSEC5KEY RDATA Presentation Format"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 The NSEC5 Resource Record"/>
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 NSEC5 RDATA Wire Format"/>
+<link href="#rfc.section.6.2" rel="Chapter" title="6.2 NSEC5 Flags Field"/>
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 NSEC5 RDATA Presentation Format"/>
+<link href="#rfc.section.7" rel="Chapter" title="7 The NSEC5PROOF Resource Record"/>
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 NSEC5PROOF RDATA Wire Format"/>
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 NSEC5PROOF RDATA Presentation Format"/>
+<link href="#rfc.section.8" rel="Chapter" title="8 NSEC5 Proofs"/>
+<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Name Error Responses"/>
+<link href="#rfc.section.8.2" rel="Chapter" title="8.2 No Data Responses"/>
+<link href="#rfc.section.8.2.1" rel="Chapter" title="8.2.1 No Data Response, Opt-Out Not In Effect"/>
+<link href="#rfc.section.8.2.2" rel="Chapter" title="8.2.2 No Data Response, Opt-Out In Effect"/>
+<link href="#rfc.section.8.3" rel="Chapter" title="8.3 Wildcard Responses"/>
+<link href="#rfc.section.8.4" rel="Chapter" title="8.4 Wildcard No Data Responses"/>
+<link href="#rfc.section.9" rel="Chapter" title="9 Authoritative Server Considerations"/>
+<link href="#rfc.section.9.1" rel="Chapter" title="9.1 Zone Signing"/>
+<link href="#rfc.section.9.2" rel="Chapter" title="9.2 Zone Serving"/>
+<link href="#rfc.section.9.3" rel="Chapter" title="9.3 NSEC5KEY Rollover Mechanism"/>
+<link href="#rfc.section.9.4" rel="Chapter" title="9.4 Secondary Servers"/>
+<link href="#rfc.section.9.5" rel="Chapter" title="9.5 Zones Using Unknown Hash Algorithms"/>
+<link href="#rfc.section.9.6" rel="Chapter" title="9.6 Dynamic Updates"/>
+<link href="#rfc.section.10" rel="Chapter" title="10 Resolver Considerations"/>
+<link href="#rfc.section.11" rel="Chapter" title="11 Validator Considerations"/>
+<link href="#rfc.section.11.1" rel="Chapter" title="11.1 Validating Responses"/>
+<link href="#rfc.section.11.2" rel="Chapter" title="11.2 Validating Referrals to Unsigned Subzones"/>
+<link href="#rfc.section.11.3" rel="Chapter" title="11.3 Responses With Unknown Hash Algorithms"/>
+<link href="#rfc.section.12" rel="Chapter" title="12 Special Considerations"/>
+<link href="#rfc.section.12.1" rel="Chapter" title="12.1 Transition Mechanism"/>
+<link href="#rfc.section.12.2" rel="Chapter" title="12.2 NSEC5 Private Keys"/>
+<link href="#rfc.section.12.3" rel="Chapter" title="12.3 Domain Name Length Restrictions"/>
+<link href="#rfc.section.13" rel="Chapter" title="13 Performance Considerations"/>
+<link href="#rfc.section.13.1" rel="Chapter" title="13.1 Performance of Cryptographic Operations"/>
+<link href="#rfc.section.13.1.1" rel="Chapter" title="13.1.1 NSEC3 Hashing Performance"/>
+<link href="#rfc.section.13.1.2" rel="Chapter" title="13.1.2 NSEC5 Hashing Performance"/>
+<link href="#rfc.section.13.2" rel="Chapter" title="13.2 Authoritative Server Startup"/>
+<link href="#rfc.section.13.3" rel="Chapter" title="13.3 NSEC5 Answer Generating and Processing"/>
+<link href="#rfc.section.13.4" rel="Chapter" title="13.4 Precomputed NSEC5PROOF Values"/>
+<link href="#rfc.section.13.5" rel="Chapter" title="13.5 Response Lengths"/>
+<link href="#rfc.section.13.6" rel="Chapter" title="13.6 Summary"/>
+<link href="#rfc.section.14" rel="Chapter" title="14 Security Considerations"/>
+<link href="#rfc.section.14.1" rel="Chapter" title="14.1 Zone Enumeration Attacks"/>
+<link href="#rfc.section.14.2" rel="Chapter" title="14.2 Hash Collisions"/>
+<link href="#rfc.section.14.3" rel="Chapter" title="14.3 Compromise of the Private NSEC5 Key"/>
+<link href="#rfc.section.14.4" rel="Chapter" title="14.4 Key Length Considerations"/>
+<link href="#rfc.section.14.5" rel="Chapter" title="14.5 Transitioning to a New NSEC5 Algorithm"/>
+<link href="#rfc.section.15" rel="Chapter" title="15 IANA Considerations"/>
+<link href="#rfc.section.16" rel="Chapter" title="16 Contributors"/>
+<link href="#rfc.references" rel="Chapter" title="17 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="17.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="17.2 Informative References"/>
+<link href="#rfc.appendix.A" rel="Chapter" title="A RSA Full Domain Hash Algorithm"/>
+<link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 FDH signature"/>
+<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 FDH verification"/>
+<link href="#rfc.appendix.B" rel="Chapter" title="B Elliptic Curve VRF"/>
+<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 ECVRF Hash To Curve"/>
+<link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 ECVRF Auxiliary Functions"/>
+<link href="#rfc.appendix.B.2.1" rel="Chapter" title="B.2.1 ECVRF Hash Points"/>
+<link href="#rfc.appendix.B.2.2" rel="Chapter" title="B.2.2 ECVRF Proof To Hash"/>
+<link href="#rfc.appendix.B.2.3" rel="Chapter" title="B.2.3 ECVRF Decode Proof"/>
+<link href="#rfc.appendix.B.3" rel="Chapter" title="B.3 ECVRF Signing"/>
+<link href="#rfc.appendix.B.4" rel="Chapter" title="B.4 ECVRF Verification"/>
+<link href="#rfc.appendix.C" rel="Chapter" title="C Change Log"/>
+<link href="#rfc.appendix.D" rel="Chapter" title="D Open Issues"/>
+<link href="#rfc.authors" rel="Chapter"/>
+
+
+  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Vcelak, J., Goldberg, S., and D. Papadopoulos" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-vcelak-nsec5-03" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-9-19" />
+  <meta name="dct.abstract" content="The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource record (RR) for authenticated denial of existence and the NSEC3 for hashed authenticated denial of existence.  The NSEC RR allows for the entire zone contents to be enumerated if a server is queried for carefully chosen domain names; N queries suffice to enumerate a zone containing N names.  The NSEC3 RR adds domain-name hashing, which makes the zone enumeration harder, but not impossible.  This document introduces NSEC5, which provides an cryptographically- proven mechanism that prevents zone enumeration.  NSEC5 has the additional advantage of not requiring private zone-signing keys to be present on all authoritative servers for the zone." />
+  <meta name="description" content="The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource record (RR) for authenticated denial of existence and the NSEC3 for hashed authenticated denial of existence.  The NSEC RR allows for the entire zone contents to be enumerated if a server is queried for carefully chosen domain names; N queries suffice to enumerate a zone containing N names.  The NSEC3 RR adds domain-name hashing, which makes the zone enumeration harder, but not impossible.  This document introduces NSEC5, which provides an cryptographically- proven mechanism that prevents zone enumeration.  NSEC5 has the additional advantage of not requiring private zone-signing keys to be present on all authoritative servers for the zone." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+  <td class="left">Network Working Group</td>
+  <td class="right">J. Vcelak</td>
+</tr>
+<tr>
+  <td class="left">Internet-Draft</td>
+  <td class="right">CZ.NIC</td>
+</tr>
+<tr>
+  <td class="left">Intended status: Standards Track</td>
+  <td class="right">S. Goldberg</td>
+</tr>
+<tr>
+  <td class="left">Expires: March 23, 2017</td>
+  <td class="right">D. Papadopoulos</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">Boston University</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">September 19, 2016</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">NSEC5, DNSSEC Authenticated Denial of Existence<br />
+  <span class="filename">draft-vcelak-nsec5-03</span></p>
+  
+  <h1 id="rfc.abstract">
+  <a href="#rfc.abstract">Abstract</a>
+</h1>
+<p>The Domain Name System Security (DNSSEC) Extensions introduced the NSEC resource record (RR) for authenticated denial of existence and the NSEC3 for hashed authenticated denial of existence.  The NSEC RR allows for the entire zone contents to be enumerated if a server is queried for carefully chosen domain names; N queries suffice to enumerate a zone containing N names.  The NSEC3 RR adds domain-name hashing, which makes the zone enumeration harder, but not impossible.  This document introduces NSEC5, which provides an cryptographically- proven mechanism that prevents zone enumeration.  NSEC5 has the additional advantage of not requiring private zone-signing keys to be present on all authoritative servers for the zone.</p>
+<h1 id="rfc.status">
+  <a href="#rfc.status">Status of This Memo</a>
+</h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on March 23, 2017.</p>
+<h1 id="rfc.copyrightnotice">
+  <a href="#rfc.copyrightnotice">Copyright Notice</a>
+</h1>
+<p>Copyright (c) 2016 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Rationale</a></li>
+<li>1.2.   <a href="#rfc.section.1.2">Requirements</a></li>
+<li>1.3.   <a href="#rfc.section.1.3">Terminology</a></li>
+</ul><li>2.   <a href="#rfc.section.2">Backward Compatibility</a></li>
+<li>3.   <a href="#rfc.section.3">How NSEC5 Works</a></li>
+<li>4.   <a href="#rfc.section.4">NSEC5 Algorithms</a></li>
+<li>5.   <a href="#rfc.section.5">The NSEC5KEY Resource Record</a></li>
+<ul><li>5.1.   <a href="#rfc.section.5.1">NSEC5KEY RDATA Wire Format</a></li>
+<li>5.2.   <a href="#rfc.section.5.2">NSEC5KEY RDATA Presentation Format</a></li>
+</ul><li>6.   <a href="#rfc.section.6">The NSEC5 Resource Record</a></li>
+<ul><li>6.1.   <a href="#rfc.section.6.1">NSEC5 RDATA Wire Format</a></li>
+<li>6.2.   <a href="#rfc.section.6.2">NSEC5 Flags Field</a></li>
+<li>6.3.   <a href="#rfc.section.6.3">NSEC5 RDATA Presentation Format</a></li>
+</ul><li>7.   <a href="#rfc.section.7">The NSEC5PROOF Resource Record</a></li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">NSEC5PROOF RDATA Wire Format</a></li>
+<li>7.2.   <a href="#rfc.section.7.2">NSEC5PROOF RDATA Presentation Format</a></li>
+</ul><li>8.   <a href="#rfc.section.8">NSEC5 Proofs</a></li>
+<ul><li>8.1.   <a href="#rfc.section.8.1">Name Error Responses</a></li>
+<li>8.2.   <a href="#rfc.section.8.2">No Data Responses</a></li>
+<ul><li>8.2.1.   <a href="#rfc.section.8.2.1">No Data Response, Opt-Out Not In Effect</a></li>
+<li>8.2.2.   <a href="#rfc.section.8.2.2">No Data Response, Opt-Out In Effect</a></li>
+</ul><li>8.3.   <a href="#rfc.section.8.3">Wildcard Responses</a></li>
+<li>8.4.   <a href="#rfc.section.8.4">Wildcard No Data Responses</a></li>
+</ul><li>9.   <a href="#rfc.section.9">Authoritative Server Considerations</a></li>
+<ul><li>9.1.   <a href="#rfc.section.9.1">Zone Signing</a></li>
+<li>9.2.   <a href="#rfc.section.9.2">Zone Serving</a></li>
+<li>9.3.   <a href="#rfc.section.9.3">NSEC5KEY Rollover Mechanism</a></li>
+<li>9.4.   <a href="#rfc.section.9.4">Secondary Servers</a></li>
+<li>9.5.   <a href="#rfc.section.9.5">Zones Using Unknown Hash Algorithms</a></li>
+<li>9.6.   <a href="#rfc.section.9.6">Dynamic Updates</a></li>
+</ul><li>10.   <a href="#rfc.section.10">Resolver Considerations</a></li>
+<li>11.   <a href="#rfc.section.11">Validator Considerations</a></li>
+<ul><li>11.1.   <a href="#rfc.section.11.1">Validating Responses</a></li>
+<li>11.2.   <a href="#rfc.section.11.2">Validating Referrals to Unsigned Subzones</a></li>
+<li>11.3.   <a href="#rfc.section.11.3">Responses With Unknown Hash Algorithms</a></li>
+</ul><li>12.   <a href="#rfc.section.12">Special Considerations</a></li>
+<ul><li>12.1.   <a href="#rfc.section.12.1">Transition Mechanism</a></li>
+<li>12.2.   <a href="#rfc.section.12.2">NSEC5 Private Keys</a></li>
+<li>12.3.   <a href="#rfc.section.12.3">Domain Name Length Restrictions</a></li>
+</ul><li>13.   <a href="#rfc.section.13">Performance Considerations</a></li>
+<ul><li>13.1.   <a href="#rfc.section.13.1">Performance of Cryptographic Operations</a></li>
+<ul><li>13.1.1.   <a href="#rfc.section.13.1.1">NSEC3 Hashing Performance</a></li>
+<li>13.1.2.   <a href="#rfc.section.13.1.2">NSEC5 Hashing Performance</a></li>
+</ul><li>13.2.   <a href="#rfc.section.13.2">Authoritative Server Startup</a></li>
+<li>13.3.   <a href="#rfc.section.13.3">NSEC5 Answer Generating and Processing</a></li>
+<li>13.4.   <a href="#rfc.section.13.4">Precomputed NSEC5PROOF Values</a></li>
+<li>13.5.   <a href="#rfc.section.13.5">Response Lengths</a></li>
+<li>13.6.   <a href="#rfc.section.13.6">Summary</a></li>
+</ul><li>14.   <a href="#rfc.section.14">Security Considerations</a></li>
+<ul><li>14.1.   <a href="#rfc.section.14.1">Zone Enumeration Attacks</a></li>
+<li>14.2.   <a href="#rfc.section.14.2">Hash Collisions</a></li>
+<li>14.3.   <a href="#rfc.section.14.3">Compromise of the Private NSEC5 Key</a></li>
+<li>14.4.   <a href="#rfc.section.14.4">Key Length Considerations</a></li>
+<li>14.5.   <a href="#rfc.section.14.5">Transitioning to a New NSEC5 Algorithm</a></li>
+</ul><li>15.   <a href="#rfc.section.15">IANA Considerations</a></li>
+<li>16.   <a href="#rfc.section.16">Contributors</a></li>
+<li>17.   <a href="#rfc.references">References</a></li>
+<ul><li>17.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>17.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">RSA Full Domain Hash Algorithm</a></li>
+<ul><li>A.1.   <a href="#rfc.appendix.A.1">FDH signature</a></li>
+<li>A.2.   <a href="#rfc.appendix.A.2">FDH verification</a></li>
+</ul><li>Appendix B.   <a href="#rfc.appendix.B">Elliptic Curve VRF</a></li>
+<ul><li>B.1.   <a href="#rfc.appendix.B.1">ECVRF Hash To Curve</a></li>
+<li>B.2.   <a href="#rfc.appendix.B.2">ECVRF Auxiliary Functions</a></li>
+<ul><li>B.2.1.   <a href="#rfc.appendix.B.2.1">ECVRF Hash Points</a></li>
+<li>B.2.2.   <a href="#rfc.appendix.B.2.2">ECVRF Proof To Hash</a></li>
+<li>B.2.3.   <a href="#rfc.appendix.B.2.3">ECVRF Decode Proof</a></li>
+</ul><li>B.3.   <a href="#rfc.appendix.B.3">ECVRF Signing</a></li>
+<li>B.4.   <a href="#rfc.appendix.B.4">ECVRF Verification</a></li>
+</ul><li>Appendix C.   <a href="#rfc.appendix.C">Change Log</a></li>
+<li>Appendix D.   <a href="#rfc.appendix.D">Open Issues</a></li>
+<li><a href="#rfc.authors">Authors' Addresses</a></li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
+<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#rationale" id="rationale">Rationale</a></h1>
+<p id="rfc.section.1.1.p.1">The DNS Security Extensions (DNSSEC) provides data integrity protection using public-key cryptography, while not requiring that authoritative servers compute signatures on-the-fly.  The content of the zone is usually pre-computed and served as is.  The evident advantages of this approach are reduced performance requirements per query, as well as not requiring private zone-signing keys to be present on nameservers facing the network.</p>
+<p id="rfc.section.1.1.p.2">With DNSSEC, each resource record (RR) set in the zone is signed.  The signature is retained as an RRSIG RR directly in the zone.  This enables response authentication for data existing in the zone.  To ensure integrity of denying answers, an NSEC chain of all existing domain names in the zone is constructed.  The chain is made of RRs, where each RR represents two consecutive domain names in canonical order present in the zone.  The NSEC RRs are signed the same way as any other RRs in the zone.  Non-existence of a name can be thus proven by presenting a NSEC RR which covers the name.</p>
+<p id="rfc.section.1.1.p.3">As side-effect, however, the NSEC chain allows for enumeration of the zone's contents by sequentially querying for the names immediately following those in the most-recently retrieved NSEC record; N queries suffice to enumerate a zone containing N names.  As such, the NSEC3 hashed denial of existence was introduced to prevent zone enumeration.  In NSEC3, the original domain names in the NSEC chain are replaced by their cryptographic hashes.  While NSEC3 makes zone enumeration more difficult, offline dictionary attacks are still possible and have been demonstrated; this is because hashes may be computed offline and the space of possible domain names is restricted <a href="#nsec3walker">[nsec3walker]</a><a href="#nsec3gpu">[nsec3gpu]</a>.</p>
+<p id="rfc.section.1.1.p.4">Zone enumeration can be prevented with NSEC3 if having the authoritative server compute NSEC3 RRs on-the-fly, in response to queries with denying responses.  Usually, this is done with Minimally Covering NSEC Records or NSEC3 White Lies <a href="#RFC7129">[RFC7129]</a>.  The disadvantage of this approach is a required presence of the private key on all authoritative servers for the zone.  This is often undesirable, as the holder of the private key can tamper with the zone contents, and having private keys on many network-facing servers increases the risk that keys can be compromised.</p>
+<p id="rfc.section.1.1.p.5">To prevent zone content enumeration without keeping private keys on all authoritative servers, NSEC5 replaces the unkeyed cryptographic hash function used in NSEC3 with a public-key hashing scheme.  Hashing in NSEC5 is performed with a separate NSEC5 key.  The public portion of this key is distributed in an NSEC5KEY RR, and is used to validate NSEC5 hash values.  The private portion of the NSEC5 key is present on all authoritative servers for the zone, and is used to compute hash values.</p>
+<p id="rfc.section.1.1.p.6">Importantly, the NSEC5KEY key cannot be used to modify the contents of the zone.  Thus, any compromise of the private NSEC5 key does not lead to a compromise of zone contents.  All that is lost is privacy against zone enumeration, effectively downgrading the security of NSEC5 to that of NSEC3.  NSEC5 comes with a cryptographic proof of security, available in <a href="#nsec5">[nsec5]</a>.</p>
+<p id="rfc.section.1.1.p.7">The NSEC5 is not intended to replace NSEC or NSEC3.  It is designed as an alternative mechanism for authenticated denial of existence.</p>
+<h1 id="rfc.section.1.2"><a href="#rfc.section.1.2">1.2.</a> <a href="#requirements" id="requirements">Requirements</a></h1>
+<p id="rfc.section.1.2.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
+<h1 id="rfc.section.1.3"><a href="#rfc.section.1.3">1.3.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
+<p id="rfc.section.1.3.p.1">The reader is assumed to be familiar with the basic DNS and DNSSEC concepts described in <a href="#RFC1034">[RFC1034]</a>, <a href="#RFC1035">[RFC1035]</a>, <a href="#RFC4033">[RFC4033]</a>, <a href="#RFC4034">[RFC4034]</a>, <a href="#RFC4035">[RFC4035]</a>, and subsequent RFCs that update them: <a href="#RFC2136">[RFC2136]</a>, <a href="#RFC2181">[RFC2181]</a>, <a href="#RFC2308">[RFC2308]</a>, and <a href="#RFC5155">[RFC5155]</a>.</p>
+<p id="rfc.section.1.3.p.2">The following terminology is used through this document:</p>
+<p/>
+
+<dl>
+  <dt>Base32hex:</dt>
+  <dd style="margin-left: 8">The "Base 32 Encoding with Extended Hex Alphabet" as specified in <a href="#RFC4648">[RFC4648]</a>.  The padding characters ("=") are not used in NSEC5 specification.</dd>
+  <dt>Base64:</dt>
+  <dd style="margin-left: 8">The "Base 64 Encoding" as specified in <a href="#RFC4648">[RFC4648]</a>.</dd>
+  <dt>NSEC5 proof:</dt>
+  <dd style="margin-left: 8">A signed hash of a domain name (hash-and-sign paradigm).  A holder of the private key (e.g., authoritative server) can compute the proof.  Anyone knowing the public key (e.g., client) can verify it's validity.</dd>
+  <dt>NSEC5 hash:</dt>
+  <dd style="margin-left: 8">A cryptographic hash (digest) of an NSEC5 proof.  If the NSEC5 proof is known, anyone can compute and verify it's NSEC5 hash.</dd>
+  <dt>NSEC5 algorithm:</dt>
+  <dd style="margin-left: 8">A pair of algorithms used to compute NSEC5 proofs and NSEC5 hashes.</dd>
+</dl>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#backward-compatibility" id="backward-compatibility">Backward Compatibility</a></h1>
+<p id="rfc.section.2.p.1">The specification describes a protocol change that is not backward compatible with <a href="#RFC4035">[RFC4035]</a> and <a href="#RFC5155">[RFC5155]</a>.  NSEC5-unaware resolver will fail to validate responses introduced by this document.</p>
+<p id="rfc.section.2.p.2">To prevent NSEC5-unaware resolvers from attempting to validate the responses, new DNSSEC algorithms identifiers are introduced, the identifiers alias with existing algorithm numbers.  The zones signed according to this specification MUST use only these algorithm identifiers, thus NSEC5-unaware resolvers will treat the zone as insecure.</p>
+<p id="rfc.section.2.p.3">The new algorithm identifiers defined by this document are listed in Section 15.</p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#how-nsec5-works" id="how-nsec5-works">How NSEC5 Works</a></h1>
+<p id="rfc.section.3.p.1">To prove non-existence of a domain name in a zone, NSEC uses a chain built from domain names present in the zone.  NSEC3 replaces the original domain names by their cryptographic hashes.  NSEC5 is very similar to NSEC3, except that the cryptographic hash is replaced by hashes computed using a verifiable random function (VRF).  A VRF is essentially the public-key version of a keyed cryptographic hash.  A VRF comes with a public/private key pair, and only the holder of the private key can compute the hash, but anyone with public key can verify the hash.</p>
+<p id="rfc.section.3.p.2">In NSEC5, the original domain name is hashed twice:</p>
+<p/>
+
+<ol>
+  <li>First, the domain name is hashed using a VRF keyed with the NSEC5 private key; the result is called the NSEC5 proof.  Only an authoritative server that knows the private NSEC5 key can compute the NSEC5 proof.  Any client that knows the public NSEC5 key can validate the NSEC5 proof.</li>
+  <li>Second, the NSEC5 proof is hashed.  The result is called the NSEC5 hash value.  This hash can be computed by any party that knows the input NSEC5 proof.</li>
+</ol>
+<p id="rfc.section.3.p.4">The NSEC5 hash determines the position of a domain name in an NSEC5 chain.  That is, all the NSEC5 hashes for a zone are sorted in their canonical order, and each consecutive pair forms an NSEC5 RR.</p>
+<p id="rfc.section.3.p.5">To prove an non-existence of a particular domain name in response to a query, the server computes the NSEC5 proof (using the private NSEC5 key) on the fly.  Then it uses the NSEC5 proof to compute the corresponding NSEC5 hash.  It then identifies the NSEC5 RR that covers the NSEC5 hash.  In the response message, the server returns the NSEC5 RR, it's corresponding signature (RRSIG RRset), and synthesized NSEC5PROOF RR containing the NSEC5 proof it computed on the fly.</p>
+<p id="rfc.section.3.p.6">To validate the response, the client first uses the public NSEC5 key (stored in the zone as an NSEC5KEY RR) to verify that the NSEC5 proof corresponds with the domain name to be disproved.  Then, the client computes the NSEC5 hash from the NSEC5 proof and checks that it is covered by the NSEC5 RR.  Finally, it checks that the signature on the NSEC5 RR is valid.</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#nsec5-algorithms" id="nsec5-algorithms">NSEC5 Algorithms</a></h1>
+<p id="rfc.section.4.p.1">The algorithms used for NSEC5 authenticated denial are independent of the algorithms used for DNSSEC signing.  An NSEC5 algorithm defines how the NSEC5 proof and the NSEC5 hash is computed and validated.</p>
+<p id="rfc.section.4.p.2">The input for the NSEC5 proof computation is an RR owner name in the canonical form in the wire format and an NSEC5 private key; the output is an octet string.</p>
+<p id="rfc.section.4.p.3">The input for the NSEC5 hash computation is the corresponding NSEC5 proof; the output is an octet string.</p>
+<p id="rfc.section.4.p.4">This document defines RSAFDH-SHA256-SHA256 NSEC5 algorithm as follows:</p>
+<p/>
+
+<ul>
+  <li>NSEC5 proof is computed using an RSA based Full Domain Hash (FDH) signature with SHA-256 hash function used internally for input preprocessing.  The signature and verification is formally specified in Appendix A.</li>
+  <li>NSEC5 hash is computed by hashing the NSEC5 proof with the SHA-256 hash function as specified in <a href="#RFC6234">[RFC6234]</a>.</li>
+  <li>The public key format to be used in NSEC5KEY RR is defined in Section 2 of <a href="#RFC3110">[RFC3110]</a> and thus is the same as the format used to store RSA public keys in DNSKEY RRs.</li>
+</ul>
+<p id="rfc.section.4.p.6">This document defines EC-P256-SHA256 NSEC5 algorithm as follows:</p>
+<p/>
+
+<ul>
+  <li>NSEC5 proof is computed using an Elliptic Curve VRF with FIPS 186-3 P-256 curve.  The proof computation and verification is formally specified in Appendix B.  The curve parameters are specified in <a href="#FIPS-186-3">[FIPS-186-3]</a> (Section D.1.2.3) and <a href="#RFC5114">[RFC5114]</a> (Section 2.6).</li>
+  <li>NSEC5 hash is x-coordinate of the group element gamma from the NSEC5 proof (specified in Appendix B), encoded as a fixed-width 32-octet unsigned integer in network byte order.  In practice, the hash is a substring of the proof ranging from 2nd to 33th octet of the proof inclusive.</li>
+  <li>The public key format to be used in NSEC5KEY RR is defined in Section 4 of <a href="#RFC6605">[RFC6605]</a> and thus is the same as the format used to store ECDSA public keys in DNSKEY RRs.</li>
+</ul>
+<p id="rfc.section.4.p.8">This document defines EC-ED25519-SHA256 NSEC5 as follows:</p>
+<p/>
+
+<ul>
+  <li>NSEC5 proof is the same as with EC-P256-SHA256 but using Ed25519 elliptic curve with parameters defined in <a href="#RFC7748">[RFC7748]</a> (Section 4.1).</li>
+  <li>NSEC5 hash is the same as with EC-P256-SHA256.</li>
+  <li>The public key format to be used in NSEC5KEY RR is defined in Section 3 of <a href="#I-D.ietf-curdle-dnskey-ed25519">[I-D.ietf-curdle-dnskey-ed25519]</a> and thus is the same as the format used to store Ed25519 public keys in DNSKEY RRs.</li>
+</ul>
+<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#the-nsec5key-resource-record" id="the-nsec5key-resource-record">The NSEC5KEY Resource Record</a></h1>
+<p id="rfc.section.5.p.1">The NSEC5KEY RR stores an NSEC5 public key.  The key allows clients to verify a validity of NSEC5 proof sent by a server.</p>
+<h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#nsec5key-rdata-wire-format" id="nsec5key-rdata-wire-format">NSEC5KEY RDATA Wire Format</a></h1>
+<p id="rfc.section.5.1.p.1">The RDATA for NSEC5KEY RR is as shown below:</p>
+<pre>
+                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Algorithm   |                  Public Key                   /
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p id="rfc.section.5.1.p.2">Algorithm is a single octet identifying NSEC5 algorithm.</p>
+<p id="rfc.section.5.1.p.3">Public Key is a variable sized field holding public key material for NSEC5 proof verification.</p>
+<h1 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a> <a href="#nsec5key-rdata-presentation-format" id="nsec5key-rdata-presentation-format">NSEC5KEY RDATA Presentation Format</a></h1>
+<p id="rfc.section.5.2.p.1">The presentation format of the NSEC5KEY RDATA is as follows:</p>
+<p id="rfc.section.5.2.p.2">The Algorithm field is represented as an unsigned decimal integer.</p>
+<p id="rfc.section.5.2.p.3">The Public Key field is represented in Base64 encoding.  Whitespace is allowed within the Base64 text.</p>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#the-nsec5-resource-record" id="the-nsec5-resource-record">The NSEC5 Resource Record</a></h1>
+<p id="rfc.section.6.p.1">The NSEC5 RR provides authenticated denial of existence for an RRset.  One NSEC5 RR represents one piece of an NSEC5 chain, proving existence of RR types present at the original domain name and also non-existence of other domain names in a part of the hashed domain name space.</p>
+<h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#nsec5-rdata-wire-format" id="nsec5-rdata-wire-format">NSEC5 RDATA Wire Format</a></h1>
+<p id="rfc.section.6.1.p.1">The RDATA for NSEC5 RR is as shown below:</p>
+<pre>
+                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Key Tag            |     Flags     |  Next Length  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     Next Hashed Owner Name                    /
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+/                         Type Bit Maps                         /
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p id="rfc.section.6.1.p.2">Key Tag field contains the key tag value of the NSEC5KEY RR that validates the NSEC5 RR, in network byte order.  The value is computed from the NSEC5KEY RDATA using the same algorithm, which is used to compute key tag values for DNSKEY RRs.  The algorithm is defined in <a href="#RFC4034">[RFC4034]</a>.</p>
+<p id="rfc.section.6.1.p.3">Flags field is a single octet.  The meaning of individual bits of the field is defined in Section 6.2.</p>
+<p id="rfc.section.6.1.p.4">Next length is an unsigned single octet specifying the length of the Next Hashed Owner Name field in octets.</p>
+<p id="rfc.section.6.1.p.5">Next Hashed Owner Name field is a sequence of binary octets.  It contains an NSEC5 hash of the next domain name in the NSEC5 chain.</p>
+<p id="rfc.section.6.1.p.6">Type Bit Maps is a variable sized field encoding RR types present at the original owner name matching the NSEC5 RR.  The format of the field is equivalent to the format used in NSEC3 RR, described in <a href="#RFC5155">[RFC5155]</a>.</p>
+<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#nsec5-flags-field" id="nsec5-flags-field">NSEC5 Flags Field</a></h1>
+<p id="rfc.section.6.2.p.1">The following one-bit NSEC5 flags are defined:</p>
+<pre>
+ 0 1 2 3 4 5 6 7
++-+-+-+-+-+-+-+-+
+|           |W|O|
++-+-+-+-+-+-+-+-+
+
+  O - Opt-Out flag
+
+  W - Wildcard flag
+</pre>
+<p id="rfc.section.6.2.p.2">All the other flags are reserved for future use and MUST be zero.</p>
+<p id="rfc.section.6.2.p.3">The Opt-Out flag has the same semantics as in NSEC3.  The definition and considerations in <a href="#RFC5155">[RFC5155]</a> are valid, except that NSEC3 is replaced by NSEC5.</p>
+<p id="rfc.section.6.2.p.4">The Wildcard flag indicates that a wildcard synthesis is possible at the original domain name level (i.e., there is a wildcard node immediately descending from the immediate ancestor of the original domain name).  The purpose of the Wildcard flag is to reduce a maximum number of RRs required for authenticated denial of existence proof.</p>
+<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#nsec5-rdata-presentation-format" id="nsec5-rdata-presentation-format">NSEC5 RDATA Presentation Format</a></h1>
+<p id="rfc.section.6.3.p.1">The presentation format of the NSEC5 RDATA is as follows:</p>
+<p id="rfc.section.6.3.p.2">The Key Tag field is represented as an unsigned decimal integer.</p>
+<p id="rfc.section.6.3.p.3">The Flags field is represented as an unsigned decimal integer.</p>
+<p id="rfc.section.6.3.p.4">The Next Length field is not represented.</p>
+<p id="rfc.section.6.3.p.5">The Next Hashed Owner Name field is represented as a sequence of case-insensitive Base32hex digits without any whitespace and without padding.</p>
+<p id="rfc.section.6.3.p.6">The Type Bit Maps representation is equivalent to the representation used in NSEC3 RR, described in <a href="#RFC5155">[RFC5155]</a>.</p>
+<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#the-nsec5proof-resource-record" id="the-nsec5proof-resource-record">The NSEC5PROOF Resource Record</a></h1>
+<p id="rfc.section.7.p.1">The NSEC5PROOF record is synthesized by the authoritative server on- the-fly.  The record contains the NSEC5 proof, proving a position of the owner name in an NSEC5 chain.</p>
+<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#nsec5proof-rdata-wire-format" id="nsec5proof-rdata-wire-format">NSEC5PROOF RDATA Wire Format</a></h1>
+<p id="rfc.section.7.1.p.1">The RDATA for NSEC5PROOF is as as shown below:</p>
+<pre>
+                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Key Tag            |        Owner Name Hash        /
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p id="rfc.section.7.1.p.2">Key Tag field contains the key tag value of the NSEC5KEY RR that validates the NSEC5PROOF RR, in network byte order.</p>
+<p id="rfc.section.7.1.p.3">Owner Name Hash is a variable sized sequence of binary octets encoding the NSEC5 proof of the owner name of the RR.</p>
+<h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#nsec5proof-rdata-presentation-format" id="nsec5proof-rdata-presentation-format">NSEC5PROOF RDATA Presentation Format</a></h1>
+<p id="rfc.section.7.2.p.1">The presentation format of the NSEC5PROOF RDATA is as follows:</p>
+<p id="rfc.section.7.2.p.2">The Key Tag field is represented as an unsigned decimal integer.</p>
+<p id="rfc.section.7.2.p.3">The Owner Name Hash is represented in Base64 encoding.  Whitespace is allowed within the Base64 text.</p>
+<h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#nsec5-proofs" id="nsec5-proofs">NSEC5 Proofs</a></h1>
+<p id="rfc.section.8.p.1">This section summarizes all possible types of authenticated denial of existence.  For each type the following lists are included:</p>
+<p/>
+
+<ol>
+  <li>Facts to prove.  The minimum amount of information an authoritative server must provide to a client to assure the client that the response content is valid.</li>
+  <li>Authoritative server proofs.  NSEC5 RRs an authoritative server must include in a response to prove the listed facts.</li>
+  <li>Validator checks.  Individual checks a validating server is required to perform on a response.  The response content is considered valid only if all the checks pass.</li>
+</ol>
+<p id="rfc.section.8.p.3">If NSEC5 is said to match a domain name, the owner name of the NSEC5 RR has to be equivalent to an NSEC5 hash of that domain name.  If an NSEC5 RR is said to cover a domain name, the NSEC5 hash of the domain name must lay strictly between that NSEC5 RR's Owner Name and Next Hashed Owner Name.</p>
+<h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#name-error-responses" id="name-error-responses">Name Error Responses</a></h1>
+<p id="rfc.section.8.1.p.1">Facts to prove:</p>
+<p id="rfc.section.8.1.p.2">No RRset matching the QNAME exactly exists.</p>
+<p id="rfc.section.8.1.p.3">No RRset matching the QNAME via wildcard expansion exists.</p>
+<p id="rfc.section.8.1.p.4">The QNAME does not fall into a delegation.</p>
+<p id="rfc.section.8.1.p.5">The QNAME does not fall into a DNAME redirection.</p>
+<p id="rfc.section.8.1.p.6">Authoritative server proofs:</p>
+<p id="rfc.section.8.1.p.7">Closest encloser.</p>
+<p id="rfc.section.8.1.p.8">Next closer name.</p>
+<p id="rfc.section.8.1.p.9">Validator checks:</p>
+<p id="rfc.section.8.1.p.10">Closest encloser belongs to the zone.</p>
+<p id="rfc.section.8.1.p.11">Closest encloser has the Wildcard flag cleared.</p>
+<p id="rfc.section.8.1.p.12">Closest encloser does not have NS without SOA in the Type Bit Map.</p>
+<p id="rfc.section.8.1.p.13">Closest encloser does not have DNAME in the Type Bit Maps.</p>
+<p id="rfc.section.8.1.p.14">Next closer name is derived correctly.</p>
+<h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#no-data-responses" id="no-data-responses">No Data Responses</a></h1>
+<p id="rfc.section.8.2.p.1">The processing of a No Data response for DS QTYPE differs if the Opt- Out is in effect.  For DS QTYPE queries, the validator has two possible checking paths.  The correct path can be simply decided by inspecting if the NSEC5 RR in the response matches the QNAME.</p>
+<p id="rfc.section.8.2.p.2">Note that the Opt-Out is valid only for DS QTYPE queries.</p>
+<h1 id="rfc.section.8.2.1"><a href="#rfc.section.8.2.1">8.2.1.</a> <a href="#no-data-response-opt-out-not-in-effect" id="no-data-response-opt-out-not-in-effect">No Data Response, Opt-Out Not In Effect</a></h1>
+<p id="rfc.section.8.2.1.p.1">Facts to prove:</p>
+<p id="rfc.section.8.2.1.p.2">An RRset matching the QNAME exists.</p>
+<p id="rfc.section.8.2.1.p.3">No QTYPE RRset matching the QNAME exists.</p>
+<p id="rfc.section.8.2.1.p.4">No CNAME RRset matching the QNAME exists.</p>
+<p id="rfc.section.8.2.1.p.5">Authoritative server proofs:</p>
+<p id="rfc.section.8.2.1.p.6">QNAME.</p>
+<p id="rfc.section.8.2.1.p.7">Validator checks:</p>
+<p id="rfc.section.8.2.1.p.8">The NSEC5 RR exactly matches the QNAME.</p>
+<p id="rfc.section.8.2.1.p.9">The NSEC5 RR does not have QTYPE in the Type Bit Map.</p>
+<p id="rfc.section.8.2.1.p.10">The NSEC5 RR does not have CNAME in the Type Bit Map.</p>
+<h1 id="rfc.section.8.2.2"><a href="#rfc.section.8.2.2">8.2.2.</a> <a href="#no-data-response-opt-out-in-effect" id="no-data-response-opt-out-in-effect">No Data Response, Opt-Out In Effect</a></h1>
+<p id="rfc.section.8.2.2.p.1">Facts to prove:</p>
+<p id="rfc.section.8.2.2.p.2">The delegation is not covered by the NSEC5 chain.</p>
+<p id="rfc.section.8.2.2.p.3">Authoritative server proofs:</p>
+<p id="rfc.section.8.2.2.p.4">Closest provable encloser.</p>
+<p id="rfc.section.8.2.2.p.5">Validator checks:</p>
+<p id="rfc.section.8.2.2.p.6">Closest provable encloser is in zone.</p>
+<p id="rfc.section.8.2.2.p.7">Closest provable encloser covers (not matches) the QNAME.</p>
+<p id="rfc.section.8.2.2.p.8">Closest provable encloser has the Opt-Out flag set.</p>
+<h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#wildcard-responses" id="wildcard-responses">Wildcard Responses</a></h1>
+<p id="rfc.section.8.3.p.1">Facts to prove:</p>
+<p id="rfc.section.8.3.p.2">No RRset matching the QNAME exactly exists.</p>
+<p id="rfc.section.8.3.p.3">No wildcard closer to the QNAME exists.</p>
+<p id="rfc.section.8.3.p.4">Authoritative server proofs:</p>
+<p id="rfc.section.8.3.p.5">Next closer name.</p>
+<p id="rfc.section.8.3.p.6">Validator checks:</p>
+<p id="rfc.section.8.3.p.7">Next closer name is derived correctly.</p>
+<p id="rfc.section.8.3.p.8">Next closer name covers (not matches).</p>
+<h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> <a href="#wildcard-no-data-responses" id="wildcard-no-data-responses">Wildcard No Data Responses</a></h1>
+<p id="rfc.section.8.4.p.1">Facts to prove:</p>
+<p id="rfc.section.8.4.p.2">No RRset matching the QNAME exactly exists.</p>
+<p id="rfc.section.8.4.p.3">No QTYPE RRset exists at the wildcard matching the QNAME.</p>
+<p id="rfc.section.8.4.p.4">No CNAME RRset exists at the wildcard matching the QNAME.</p>
+<p id="rfc.section.8.4.p.5">No wildcard closer to the QNAME exists.</p>
+<p id="rfc.section.8.4.p.6">Authoritative server proofs:</p>
+<p id="rfc.section.8.4.p.7">Source of synthesis (i.e., wildcard at closest encloser).</p>
+<p id="rfc.section.8.4.p.8">Next closer name.</p>
+<p id="rfc.section.8.4.p.9">Validator checks:</p>
+<p id="rfc.section.8.4.p.10">Source of synthesis matches exactly the QNAME.</p>
+<p id="rfc.section.8.4.p.11">Source of synthesis does not have QTYPE in the Type Bit Map.</p>
+<p id="rfc.section.8.4.p.12">Source of synthesis does not have CNAME in the Type Bit Map.</p>
+<p id="rfc.section.8.4.p.13">Next closer name is derived correctly.</p>
+<p id="rfc.section.8.4.p.14">Next closer name covers (not matches).</p>
+<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#authoritative-server-considerations" id="authoritative-server-considerations">Authoritative Server Considerations</a></h1>
+<h1 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a> <a href="#zone-signing" id="zone-signing">Zone Signing</a></h1>
+<p id="rfc.section.9.1.p.1">Zones using NSEC5 MUST satisfy the same properties as described in Section 7.1 of <a href="#RFC5155">[RFC5155]</a>, with NSEC3 replaced by NSEC5.  In addition, the following conditions MUST be satisfied as well:</p>
+<p/>
+
+<ul>
+  <li>If the original owner name has a wildcard label immediately descending from the original owner name, the corresponding NSEC5 RR MUST have the Wildcard flag set in the Flags field.  Otherwise, the flag MUST be cleared.</li>
+  <li>The zone apex MUST include an NSEC5KEY RRset containing a NSEC5 public key allowing verification of the current NSEC5 chain.</li>
+</ul>
+<p id="rfc.section.9.1.p.3">The following steps describe one possible method to properly add required NSEC5 related records into a zone.  This is not the only such existing method.</p>
+<p/>
+
+<ol>
+  <li>Select an algorithm for NSEC5.  Generate the public and private NSEC5 keys.</li>
+  <li>Add a NSEC5KEY RR into the zone apex containing the public NSEC5 key.</li>
+  <li>For each unique original domain name in the zone and each empty non-terminal, add an NSEC5 RR.  If Opt-Out is used, owner names of unsigned delegations MAY be excluded.  <ol><li>The owner name of the NSEC5 RR is the NSEC5 hash of the original owner name encoded in Base32hex without padding, prepended as a single label to the zone name.</li><li>Set the Key Tag field to be the key tag corresponding to the public NSEC5 key.</li><li>Clear the Flags field.  If Opt-Out is being used, set the Opt-Out flag.  If there is a wildcard label directly descending from the original domain name, set the Wildcard flag.  Note that the wildcard can be an empty non-terminal (i.e., the wildcard synthesis does not take effect and therefore the flag is not to be set).</li><li>Set the Next Length field to a value determined by the used NSEC5 algorithm.  Leave the Next Hashed Owner Name field blank.</li><li>Set the Type Bit Maps field based on the RRsets present at the original owner name.</li></ol></li>
+  <li>Sort the set of NSEC5 RRs into canonical order.</li>
+  <li>For each NSEC5 RR, set the Next Hashed Owner Name field by using the owner name of the next NSEC5 RR in the canonical order.  If the updated NSEC5 is the last NSEC5 RR in the chain, the owner name of the first NSEC5 RR in the chain is used instead.</li>
+</ol>
+<p id="rfc.section.9.1.p.5">The NSEC5KEY and NSEC5 RRs MUST have the same class as the zone SOA RR.  Also the NSEC5 RRs SHOULD have the same TTL value as the SOA minimum TTL field.</p>
+<p id="rfc.section.9.1.p.6">Notice that a use of Opt-Out is not indicated in the zone.  This does not affect the ability of a server to prove insecure delegations.  The Opt-Out MAY be part of the zone-signing tool configuration.</p>
+<h1 id="rfc.section.9.2"><a href="#rfc.section.9.2">9.2.</a> <a href="#zone-serving" id="zone-serving">Zone Serving</a></h1>
+<p id="rfc.section.9.2.p.1">This specification modifies DNSSEC-enabled DNS responses generated by authoritative servers.  In particular, it replaces use of NSEC or NSEC3 RRs in such responses with NSEC5 RRs and adds on-the-fly computed NSEC5PROOF RRs.</p>
+<p id="rfc.section.9.2.p.2">The authenticated denial of existence proofs in NSEC5 are almost the same as in NSEC3.  However, due to introduction of Wildcard flag in NSEC5 RRs, the NSEC5 proof consists from (up to) two NSEC5 RRs, instead of (up to) three.</p>
+<p id="rfc.section.9.2.p.3">According to a type of a response, an authoritative server MUST include NSEC5 RRs in a response as defined in Section 8.  For each NSEC5 RR in the response a matching RRSIG RRset and a synthesized NSEC5PROOF MUST be added as well.</p>
+<p id="rfc.section.9.2.p.4">A synthesized NSEC5PROOF RR has the owner name set to a domain name exactly matching the name required for the proof.  The class and TTL of the RR MUST be the same as the class and TTL value of the corresponding NSEC5 RR.  The RDATA are set according to the description in Section 7.1.</p>
+<p id="rfc.section.9.2.p.5">Notice, that the NSEC5PROOF owner name can be a wildcard (e.g., source of synthesis proof in wildcard No Data responses).  The name also always matches the domain name required for the proof while the NSEC5 RR may only cover (not match) the name in the proof (e.g., closest encloser in Name Error responses).</p>
+<p id="rfc.section.9.2.p.6">If NSEC5 is used, an answering server MUST use exactly one NSEC5 chain for one signed zone.</p>
+<p id="rfc.section.9.2.p.7">NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other authenticated denial of existence mechanism that allows for enumeration of zone contents.</p>
+<p id="rfc.section.9.2.p.8">Similarly to NSEC3, the owner names of NSEC5 RRs are not represented in the NSEC5 chain and therefore NSEC5 records deny their own existence.  The desired behavior caused by this paradox is the same as described in Section 7.2.8 of <a href="#RFC5155">[RFC5155]</a>.</p>
+<h1 id="rfc.section.9.3"><a href="#rfc.section.9.3">9.3.</a> <a href="#nsec5key-rollover-mechanism" id="nsec5key-rollover-mechanism">NSEC5KEY Rollover Mechanism</a></h1>
+<p id="rfc.section.9.3.p.1">Replacement of the NSEC5 key implies generating a new NSEC5 chain.  The NSEC5KEY rollover mechanism is similar to "Pre-Publish Zone Signing Key Rollover" as specified in <a href="#RFC6781">[RFC6781]</a>.  The NSEC5KEY rollover MUST be performed as a sequence of the following steps:</p>
+<p/>
+
+<ol>
+  <li>A new public NSEC5 key is added into the NSEC5KEY RRset in the zone apex.</li>
+  <li>The old NSEC5 chain is replaced by a new NSEC5 chain constructed using the new key.  This replacement MUST happen as a single atomic operation; the server MUST NOT be responding with RRs from both the new and old chain at the same time.</li>
+  <li>The old public key is removed from the NSEC5KEY RRset in the zone apex.</li>
+</ol>
+<p id="rfc.section.9.3.p.3">The minimal delay between the steps 1. and 2.  MUST be the time it takes for the data to propagate to the authoritative servers, plus the TTL value of the old NSEC5KEY RRset.</p>
+<p id="rfc.section.9.3.p.4">The minimal delay between the steps 2. and 3.  MUST be the time it takes for the data to propagate to the authoritative servers, plus the maximum zone TTL value of any of the data in the previous version of the zone.</p>
+<h1 id="rfc.section.9.4"><a href="#rfc.section.9.4">9.4.</a> <a href="#secondary-servers" id="secondary-servers">Secondary Servers</a></h1>
+<p id="rfc.section.9.4.p.1">This document does not define mechanism to distribute NSEC5 private keys.  See Section 14.3 for discussion on the security requirements for NSEC5 private keys.</p>
+<h1 id="rfc.section.9.5"><a href="#rfc.section.9.5">9.5.</a> <a href="#zones-using-unknown-hash-algorithms" id="zones-using-unknown-hash-algorithms">Zones Using Unknown Hash Algorithms</a></h1>
+<p id="rfc.section.9.5.p.1">Zones that are signed with unknown NSEC5 algorithm or by an unavailable NSEC5 private key cannot be effectively served.  Such zones SHOULD be rejected when loading and servers SHOULD respond with RCODE=2 (Server failure) when handling queries that would fall under such zones.</p>
+<h1 id="rfc.section.9.6"><a href="#rfc.section.9.6">9.6.</a> <a href="#dynamic-updates" id="dynamic-updates">Dynamic Updates</a></h1>
+<p id="rfc.section.9.6.p.1">A zone signed using NSEC5 MAY accept dynamic updates.  The changes to the zone MUST be performed in a way, that the zone satisfies the properties specified in Section 9.1 at any time.</p>
+<p id="rfc.section.9.6.p.2">It is RECOMMENDED that the server rejects all updates containing changes to the NSEC5 chain (or related RRSIG RRs) and performs itself any required alternations of the NSEC5 chain induced by the update.</p>
+<p id="rfc.section.9.6.p.3">Alternatively, the server MUST verify that all the properties are satisfied prior to performing the update atomically.</p>
+<h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#resolver-considerations" id="resolver-considerations">Resolver Considerations</a></h1>
+<p id="rfc.section.10.p.1">The same considerations as described in Section 9 of <a href="#RFC5155">[RFC5155]</a> for NSEC3 apply to NSEC5.  In addition, as NSEC5 RRs can be validated only with appropriate NSEC5PROOF RRs, the NSEC5PROOF RRs MUST be all together cached and included in responses with NSEC5 RRs.</p>
+<h1 id="rfc.section.11"><a href="#rfc.section.11">11.</a> <a href="#validator-considerations" id="validator-considerations">Validator Considerations</a></h1>
+<h1 id="rfc.section.11.1"><a href="#rfc.section.11.1">11.1.</a> <a href="#validating-responses" id="validating-responses">Validating Responses</a></h1>
+<p id="rfc.section.11.1.p.1">The validator MUST ignore NSEC5 RRs with Flags field values other than the ones defined in Section 6.2.</p>
+<p id="rfc.section.11.1.p.2">The validator MAY treat responses as bogus if the response contains NSEC5 RRs that refer to a different NSEC5KEY.</p>
+<p id="rfc.section.11.1.p.3">According to a type of a response, the validator MUST verify all conditions defined in Section 8.  Prior to making decision based on the content of NSEC5 RRs in a response, the NSEC5 RRs MUST be validated.</p>
+<p id="rfc.section.11.1.p.4">To validate a denial of existence, zone NSEC5 public keys are required in addition to DNSSEC public keys.  Similarly to DNSKEY RRs, the NSEC5KEY RRs are present in the zone apex.</p>
+<p id="rfc.section.11.1.p.5">The NSEC5 RR is validated as follows:</p>
+<p/>
+
+<ol>
+  <li>Select a correct NSEC5 public key to validate the NSEC5PROOF.  The Key Tag value of the NSEC5PROOF RR must match with the key tag value computed from the NSEC5KEY RDATA.</li>
+  <li>Validate the NSEC5 proof present in the NSEC5PROOF Owner Name Hash field using the NSEC5 public key.  If there are multiple NSEC5KEY RRs matching the key tag, at least one of the keys must validate the NSEC5 proof.</li>
+  <li>Compute the NSEC5 hash value from the NSEC5 proof and check if the response contains NSEC5 RR matching or covering the computed NSEC5 hash.  The TTL values of the NSEC5 and NSEC5PROOF RRs must be the same.</li>
+  <li>Validate the signature of the NSEC5 RR.</li>
+</ol>
+<p id="rfc.section.11.1.p.7">If the NSEC5 RR fails to validate, it MUST be ignored.  If some of the conditions required for an NSEC5 proof is not satisfied, the response MUST be treated as bogus.</p>
+<p id="rfc.section.11.1.p.8">Notice that determining closest encloser and next closer name in NSEC5 is easier than in NSEC3.  NSEC5 and NSEC5PROOF RRs are always present in pairs in responses and the original owner name of the NSEC5 RR matches the owner name of the NSEC5PROOF RR.</p>
+<h1 id="rfc.section.11.2"><a href="#rfc.section.11.2">11.2.</a> <a href="#validating-referrals-to-unsigned-subzones" id="validating-referrals-to-unsigned-subzones">Validating Referrals to Unsigned Subzones</a></h1>
+<p id="rfc.section.11.2.p.1">The same considerations as defined in Section 8.9 of <a href="#RFC5155">[RFC5155]</a> for NSEC3 apply to NSEC5.</p>
+<h1 id="rfc.section.11.3"><a href="#rfc.section.11.3">11.3.</a> <a href="#responses-with-unknown-hash-algorithms" id="responses-with-unknown-hash-algorithms">Responses With Unknown Hash Algorithms</a></h1>
+<p id="rfc.section.11.3.p.1">A validator MUST ignore NSEC5KEY RRs with unknown NSEC5 algorithms.  The practical result of this is that zones sighed with unknown algorithms will be considered bogus.</p>
+<h1 id="rfc.section.12"><a href="#rfc.section.12">12.</a> <a href="#special-considerations" id="special-considerations">Special Considerations</a></h1>
+<h1 id="rfc.section.12.1"><a href="#rfc.section.12.1">12.1.</a> <a href="#transition-mechanism" id="transition-mechanism">Transition Mechanism</a></h1>
+<p id="rfc.section.12.1.p.1">TODO: Not finished.  Following information will be covered:</p>
+<p id="rfc.section.12.1.p.2">o Transition from NSEC or NSEC3.</p>
+<p id="rfc.section.12.1.p.3">o Transition from NSEC5 to NSEC/NSEC3</p>
+<p id="rfc.section.12.1.p.4">o Transition to new algorithms within NSEC5</p>
+<p id="rfc.section.12.1.p.5">Quick notes on transition from NSEC/NSEC3 to NSEC5:</p>
+<p/>
+
+<ol>
+  <li>Publish NSEC5KEY RR.</li>
+  <li>Wait for data propagation to slaves and cache expiration.</li>
+  <li>Instantly switch answering from NSEC/NSEC3 to NSEC5.</li>
+</ol>
+<p id="rfc.section.12.1.p.7">Quick notes on transition from NSEC5 to NSEC/NSEC3:</p>
+<p/>
+
+<ol>
+  <li>Instantly switch answering from NSEC5 to NSEC/NSEC3.</li>
+  <li>Wait for NSEC5 RRs expiration in caches.</li>
+  <li>Remove NSEC5KEY RR from the zone.</li>
+</ol>
+<h1 id="rfc.section.12.2"><a href="#rfc.section.12.2">12.2.</a> <a href="#nsec5-private-keys" id="nsec5-private-keys">NSEC5 Private Keys</a></h1>
+<p id="rfc.section.12.2.p.1">This document does not define format to store NSEC5 private key.  Use of standardized and adopted format is RECOMMENDED.</p>
+<p id="rfc.section.12.2.p.2">The NSEC5 private key MAY be shared between multiple zones, however a separate key is RECOMMENDED for each zone.</p>
+<h1 id="rfc.section.12.3"><a href="#rfc.section.12.3">12.3.</a> <a href="#domain-name-length-restrictions" id="domain-name-length-restrictions">Domain Name Length Restrictions</a></h1>
+<p id="rfc.section.12.3.p.1">The NSEC5 creates additional restrictions on domain name lengths.  In particular, zones with names that, when converted into hashed owner names exceed the 255 octet length limit imposed by <a href="#RFC1035">[RFC1035]</a>, cannot use this specification.</p>
+<p id="rfc.section.12.3.p.2">The actual maximum length of a domain name depends on the length of the zone name and used NSEC5 algorithm.</p>
+<p id="rfc.section.12.3.p.3">All NSEC5 algorithms defined in this document use 256-bit NSEC5 hash values.  Such a value can be encoded in 52 characters in Base32hex without padding.  When constructing the NSEC5 RR owner name, the encoded hash is prepended to the name of the zone as a single label which includes the length field of a single octet.  The maximal length of the zone name in wire format is therefore 202 octets (255 - 53).</p>
+<h1 id="rfc.section.13"><a href="#rfc.section.13">13.</a> <a href="#performance-considerations" id="performance-considerations">Performance Considerations</a></h1>
+<p id="rfc.section.13.p.1">This section compares NSEC, NSEC3, and NSEC5 with regards to the size of denial-of-existence responses and performance impact on the DNS components.</p>
+<h1 id="rfc.section.13.1"><a href="#rfc.section.13.1">13.1.</a> <a href="#performance-of-cryptographic-operations" id="performance-of-cryptographic-operations">Performance of Cryptographic Operations</a></h1>
+<p id="rfc.section.13.1.p.1">Additional performance costs depend on the costs of cryptographic operations to a great extent.  The following results were retrieved with OpenSSL 1.0.2g, running an ordinary laptop on a single-core of a CPU manufactured in 2016.  The parameters of cryptographic operations were chosen to reflect the parameters used in the real-world application of DNSSEC.</p>
+<h1 id="rfc.section.13.1.1"><a href="#rfc.section.13.1.1">13.1.1.</a> <a href="#nsec3-hashing-performance" id="nsec3-hashing-performance">NSEC3 Hashing Performance</a></h1>
+<p id="rfc.section.13.1.1.p.1">NSEC3 uses multiple iterations of the SHA-1 function with an arbitrary salt.  The input of the first iteration is the domain name in wire format together with binary salt; the input of the subsequent iterations is the binary digest and the salt.  We can assume that the input size will be smaller than 32 octets for most executions.</p>
+<p id="rfc.section.13.1.1.p.2">The measured implementation gives a stable performance for small input blocks up to 32 octets.  About 4e6 hashes per second can be computed given these parameters.</p>
+<p id="rfc.section.13.1.1.p.3">The number of additional iterations in NSEC3 parameters will probably vary between 0 and 20 in reality.  Therefore we can expect the NSEC3 hash computation performance to be between 2e5 and 4e6 hashes per second.</p>
+<h1 id="rfc.section.13.1.2"><a href="#rfc.section.13.1.2">13.1.2.</a> <a href="#nsec5-hashing-performance" id="nsec5-hashing-performance">NSEC5 Hashing Performance</a></h1>
+<p id="rfc.section.13.1.2.p.1">The NSEC5 hash is computed in two steps: NSEC5 proof computation followed by hashing of the result.  As the proof computation involves relatively expensive RSA/EC cryptographic operations, the final hashing will have insignificant impact on the overall performance.  We can also expect difference between NSEC5 hashing (signing) and verification time.</p>
+<p id="rfc.section.13.1.2.p.2">The measurement results for various NSEC5 algorithms and key sizes are summarized in the following table:</p>
+<pre>
+   +----------------------+--------+-----------+----------+------------+
+   | NSEC5 algorithm      |    Key |     Proof |    Perf. |      Perf. |
+   |                      |   size |      size | (hash/s) | (verify/s) |
+   |                      | (bits) |  (octets) |          |            |
+   +----------------------+--------+-----------+----------+------------+
+   | RSAFDH-SHA256-SHA256 |   1024 |       128 |     9500 |     120000 |
+   | RSAFDH-SHA256-SHA256 |   2048 |       256 |     1500 |      46000 |
+   | RSAFDH-SHA256-SHA256 |   4096 |       512 |      200 |      14000 |
+   | EC-P256-SHA256       |    256 |        81 |     4700 |       4000 |
+   +----------------------+--------+-----------+----------+------------+
+</pre>
+<p id="rfc.section.13.1.2.p.3">Picking a moderate key size of 2048-bits for RSAFDH-SHA256-SHA256, the NSEC5 hash computation performance will be in the order of 10^3 issued hashes per second and 10^4 validated hashes per second.</p>
+<p id="rfc.section.13.1.2.p.4">EC-P256-SHA256 trades off verification performance for shorter proof size and faster query processing at the nameserver.  In that case, both hash computation and verification performance will be in the order of 10^3 hashes per second.</p>
+<p id="rfc.section.13.1.2.p.5">For completeness, the following table sumarrizes the signing and verification performance for different DNSSEC signing algorithms:</p>
+<pre>
+   +------------------+--------+-----------+-------------+-------------+
+   | Algorithm        |    Key | Signature | Performance | Performance |
+   |                  |   size |      size |    (sign/s) |  (verify/s) |
+   |                  | (bits) |  (octets) |             |             |
+   +------------------+--------+-----------+-------------+-------------+
+   | RSASHA256        |   1024 |       128 |        9000 |      140000 |
+   | RSASHA256        |   2048 |       256 |        1500 |       47000 |
+   | RSASHA256        |   4096 |       512 |         200 |       14000 |
+   | ECDSAP256SHA256  |    256 |        64 |        7400 |        4000 |
+   | ECDSAP384SHA384  |    384 |        96 |        5000 |        1000 |
+   | ECDSAP256SHA256* |    256 |        64 |       24000 |       11000 |
+   +------------------+--------+-----------+-------------+-------------+
+</pre>
+<p id="rfc.section.13.1.2.p.6">* highly optimized implementation</p>
+<p id="rfc.section.13.1.2.p.7">The retrieved values are important primarily for the purpose of evaluating performance of response validation.  The signing performance is usually not that important because the zone is signed offline.  However, when online signing is used, signing performace is also important.</p>
+<h1 id="rfc.section.13.2"><a href="#rfc.section.13.2">13.2.</a> <a href="#authoritative-server-startup" id="authoritative-server-startup">Authoritative Server Startup</a></h1>
+<p id="rfc.section.13.2.p.1">This section compares additional server startup cost based on the used authenticated denial mechanism.</p>
+<p/>
+
+<dl>
+  <dt>NSEC</dt>
+  <dd style="margin-left: 8">There are no special requirements on processing of a NSEC- signed zone during an authoritative server startup.  The server handles the NSEC RRs the same way as any other records in the zone.</dd>
+  <dt>NSEC3</dt>
+  <dd style="margin-left: 8">The authoritative server can precompute NSEC3 hashes for all domain names in the NSEC3-signed zone on startup.  With respect to query answering, this can speed up inclusion of NSEC3 RRs for existing domain names (i.e., Closest provable encloser and QNAME for No Data response).</dd>
+  <dt>NSEC5</dt>
+  <dd style="margin-left: 8">Very similar considerations apply for NSEC3 and NSEC5.  There is a strong motivation to store the NSEC5PROOF values for existing domain names in order to reduce query processing time.  A possible way to do this, without inceasing the zone size, is to store NSEC5PROOF values in a persistent storage structure, as explained in Section 13.4.</dd>
+</dl>
+<p id="rfc.section.13.2.p.3">The impact of NSEC3 and NSEC5 on the authoritative server startup performance is greatly implementation specific.  The server software vendor has to seek balance between answering performance, startup slowdown, and additional storage cost.</p>
+<h1 id="rfc.section.13.3"><a href="#rfc.section.13.3">13.3.</a> <a href="#nsec5-answer-generating-and-processing" id="nsec5-answer-generating-and-processing">NSEC5 Answer Generating and Processing</a></h1>
+<p id="rfc.section.13.3.p.1">An authenticated denial proof is required for No Data, Name Error, Wildcard Match, and Wildcard No Data answer.  The number of required records depends on used authenticated denial mechanism.  Their size, generation cost, and validation cost depend on various zone and signing parameters.</p>
+<p id="rfc.section.13.3.p.2">In the worst case, the following additional records authenticating the denial will be included into the response:</p>
+<p/>
+
+<ul>
+  <li>Up to two NSEC records and their associated RRSIG records.</li>
+  <li>Up to three NSEC3 records and their associated RRSIG records.</li>
+  <li>Up to two NSEC5 records and their associated NSEC5PROOF and RRSIG records.</li>
+</ul>
+<p id="rfc.section.13.3.p.4">The following list summarizes additional cryptographic operations performed by the authoritative server for authenticated denial worst- case scenario:</p>
+<p/>
+
+<ul>
+  <li>NSEC:  <ul><li>No cryptographic operations required.</li></ul></li>
+  <li>NSEC3:  <ul><li>NSEC3 hash for Closest provable encloser</li><li>NSEC3 hash for Next closer name</li><li>NSEC3 hash for wildcard at the closest encloser</li></ul></li>
+  <li>NSEC5:  <ul><li>NSEC5 proof and hash for Closest provable encloser (possibly precomputed)</li><li>NSEC5 proof and hash for Next closer name</li></ul></li>
+</ul>
+<h1 id="rfc.section.13.4"><a href="#rfc.section.13.4">13.4.</a> <a href="#precomputed-nsec5proof-values" id="precomputed-nsec5proof-values">Precomputed NSEC5PROOF Values</a></h1>
+<p id="rfc.section.13.4.p.1">As we dicussed in the previous section, the worst-case authenticated denial scenario with NSEC5 entails the computation of two NSEC5 proof and hash values, one for the Closest provable encloser and one for the Next closer name.  For the latter, these values must be computed from scratch at query time.  However, the proof value for the former had been computed during startup, without being stored, as part of the NSEC5 hash computation.</p>
+<p id="rfc.section.13.4.p.2">The query processing time can be drastically reduced if the NSEC5 proof values for all existing names in the zone are stored by the authoritative.  In that case, the authoritative identifies the Closest provable encloser name for the given query and looks up both the NSEC5 proof and hash value.  This limits the necessary computation during query processing to just one NSEC5 proof and hash value (that of the Next closer name).  For both variants of NSEC5, the proof computation time strongly dominates the final NSEC5 hash computation.  Therefore, by storing NSEC5 proof values query processing time is almost halved.</p>
+<p id="rfc.section.13.4.p.3">On the other hand, this slightly increases the used storage space at the authoritative.  It should be noted that these values should not be part of the zone explicitly.  They can be stored at an additional data structure.</p>
+<h1 id="rfc.section.13.5"><a href="#rfc.section.13.5">13.5.</a> <a href="#response-lengths" id="response-lengths">Response Lengths</a></h1>
+<p><a href="#nsec5ecc">[nsec5ecc]</a> precisely measured response lengths for NSEC, NSEC3 and NSEC5 using empirical data from a sample second-level domain containing about 1000 names.  The sample zone was signed several times with different DNSSEC signing algorithms and different authenticated denial of existence mechanisms.</p>
+<p id="rfc.section.13.5.p.2">For DNSKEY algorithms, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered.  For authenticated denial, NSEC, NSEC3, NSEC5 with RSAFDH-SHA256-SHA256 (2048-bit), and NSEC5 with EC-P256-SHA256 were considered.  (Note that NSEC5 with EC-ED25519-SHA256 is identical to EC-P256-SHA256 as for response size.)</p>
+<p id="rfc.section.13.5.p.3">For each instance of the signed zone, Name Error responses were collected by issuing DNS queries with a random five-character label prepended to each actual record name from the zone.  The average and standard deviation of the length of these responses are shown below.</p>
+<pre>
+   +-----------+--------------+------------------+---------------------+
+   |           | DNSKEY       |   Average length |  Standard deviation |
+   |           | algorithm    |         (octets) |            (octets) |
+   +-----------+--------------+------------------+---------------------+
+   | NSEC      | RSA          |             1116 |                  48 |
+   | NSEC      | ECDSA        |              543 |                  24 |
+   | NSEC3     | RSA          |             1440 |                 170 |
+   | NSEC3     | ECDSA        |              752 |                  84 |
+   | NSEC5/RSA | RSA          |             1767 |                   7 |
+   | NSEC5/EC  | ECDSA        |              839 |                   7 |
+   +-----------+--------------+------------------+---------------------+
+</pre>
+<h1 id="rfc.section.13.6"><a href="#rfc.section.13.6">13.6.</a> <a href="#summary" id="summary">Summary</a></h1>
+<p id="rfc.section.13.6.p.1">As anticipated, NSEC and NSEC3 are the most efficient authenticated denial mechanisms, in terms of computation for authoritative server and resolver.  NSEC also has the shortest response lengths.  However, these mechanisms do not prevent zone enumeration.</p>
+<p id="rfc.section.13.6.p.2">Regarding mechanisms that do prevent zone enumeration, NSEC5 should be examined in contrast with Minimally Covering NSEC Records or NSEC3 White Lies <a href="#RFC7129">[RFC7129]</a>.  The following table summarizes their comparison in terms of response size, performance at the authoritative server, and performance at the resolver.  For NSEC3 White Lies, RSASHA256 (2048-bit) and ECDSAPSHA256 were considered, and for NSEC5, RSAFDH-SHA256-SHA256 (2048-bit) and EC-P256-SHA256 were considered.</p>
+<pre>
+   +---------------+-----------------+------------------+--------------+
+   | Algorithm     | Response length |    Authoritative |     Resolver |
+   |               |        (octets) |        (ops/sec) |    (ops/sec) |
+   +---------------+-----------------+------------------+--------------+
+   | NSEC3WL/RSA   |            1440 |             1500 |        47000 |
+   | NSEC3WL/ECDSA |             752 |             7400 |         4000 |
+   | NSEC5/RSA     |            1767 |             1500 |        46000 |
+   | NSEC5/EC      |             839 |             4700 |         4000 |
+   +---------------+-----------------+------------------+--------------+
+</pre>
+<p id="rfc.section.13.6.p.3">NSEC5 responses lengths are only slighly longer than NSEC3 response lengths: NSEC5/RSA has responses that are about 22% longer than NSEC3/RSA, while NSEC5/EC has responses that are about 13% longer than NSEC3/ECDSA.  For both NSEC3 and NSEC5, it is clear that EC- based solutions give much shorter responses.</p>
+<p id="rfc.section.13.6.p.4">Regarding the computation performance, with RSA the difference is negligible for both nameserver and resolver, whereas with the EC- based schemes there is no slowdown for the resolver, and a slowdown of 1.5x for the server.  Importantly, we expect the slowdown to be smaller in practice because NSEC3 entails three signing/verifying computations per query in the worst case (closest encloser, next closer, wildcard at closest encloser) whereas NSEC5 requires only two.  The table above does not capture this issue, it just measures number of signing/verifying operations per second.  Future versions of this draft will more accurately measure and compare NSEC5 performance.</p>
+<p id="rfc.section.13.6.p.5">Note also that while NSEC3 White Lies outperforms NSEC5 for certain cases, NSEC3 White Lies require authoratitive nameserver to store the private zone-signing key, making each nameserver a potential point of compromise.</p>
+<h1 id="rfc.section.14"><a href="#rfc.section.14">14.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a></h1>
+<h1 id="rfc.section.14.1"><a href="#rfc.section.14.1">14.1.</a> <a href="#zone-enumeration-attacks" id="zone-enumeration-attacks">Zone Enumeration Attacks</a></h1>
+<p id="rfc.section.14.1.p.1">NSEC5 is robust to zone enumeration via offline dictionary attacks by any attacker that does not know the NSEC5 private key.  Without the private NSEC5 key, that attacker cannot compute the NSEC5 proof that corresponds to a given name; the only way it can learn the NSEC5 proof value for a given name is by sending a queries for that name to the authoritative server.  Without the NSEC5 proof value, the attacker cannot learn the NSEC5 hash value.  Thus, even an attacker that collects the entire chain of NSEC5 RR for a zone cannot use offline attacks to "reverse" that NSEC5 hash values in these NSEC5 RR and thus learn which names are present in the zone.  A formal cryptographic proof of this property is in <a href="#nsec5">[nsec5]</a>.</p>
+<h1 id="rfc.section.14.2"><a href="#rfc.section.14.2">14.2.</a> <a href="#hash-collisions" id="hash-collisions">Hash Collisions</a></h1>
+<p id="rfc.section.14.2.p.1">Hash collisions between QNAME and the owner name of an NSEC5 RR may occur.  When they do, it will be impossible to prove the non- existence of the colliding QNAME.  However, with SHA-256, this is highly unlikely (on the order of 1 in 2^128).  Note that DNSSEC already relies on the presumption that a cryptographic hash function is collision resistant, since these hash functions are used for generating and validating signatures and DS RRs.  See also the discussion on key lengths in <a href="#nsec5">[nsec5]</a>.</p>
+<h1 id="rfc.section.14.3"><a href="#rfc.section.14.3">14.3.</a> <a href="#compromise-of-the-private-nsec5-key" id="compromise-of-the-private-nsec5-key">Compromise of the Private NSEC5 Key</a></h1>
+<p id="rfc.section.14.3.p.1">NSEC5 requires authoritative servers to hold the private NSEC5 key, but not the private zone-signing keys or the private key-signing keys for the zone.</p>
+<p id="rfc.section.14.3.p.2">The private NSEC5 key needs only be as secure as the DNSSEC records whose the privacy (against zone-enumeration attacks) that NSEC5 is protecting.  This is because even an adversary that knows the private NSEC5 key cannot modify the contents of the zone; this is because the zone contents are signed using the private zone-signing key, while the private NSEC5 key is only used to compute NSEC5 proof values.  Thus, a compromise of the private NSEC5 keys does not lead to a compromise of the integrity of the DNSSEC record in the zone; instead, all that is lost is privacy against zone enumeration, if the attacker that knows the private NSEC5 key can compute NSEC5 hashes offline, and thus launch offline dictionary attacks.  Thus, a compromise of the private NSEC5 key effectively downgrades the security of NSEC5 to that of NSEC3.  A formal cryptographic proof of this property is in <a href="#nsec5">[nsec5]</a>.</p>
+<p id="rfc.section.14.3.p.3">If a zone owner wants to preserve this property of NSEC5, the zone owner SHOULD choose the NSEC5 private key to be different from the private zone-signing keys or key-signing keys for the zone.</p>
+<h1 id="rfc.section.14.4"><a href="#rfc.section.14.4">14.4.</a> <a href="#key-length-considerations" id="key-length-considerations">Key Length Considerations</a></h1>
+<p id="rfc.section.14.4.p.1">The NSEC5 key must be long enough to withstand attacks for as long as the privacy of the zone is important.  Even if the NSEC5 key is rolled frequently, its length cannot be too short, because zone privacy may be important for a period of time longer than the lifetime of the key.  (For example, an attacker might collect the entire chain of NSEC5 RR for the zone over one short period, and then, later (even after the NSEC5 key expires) perform an offline dictionary attack that attempt to "reverse" the NSEC5 hash values present in the NSEC5 RRs.)  This is in contrast to zone-signing and key-signing keys used in DNSSEC; these keys, which ensure the authenticity and integrity of the zone contents need to remain secure only during their lifetime.</p>
+<h1 id="rfc.section.14.5"><a href="#rfc.section.14.5">14.5.</a> <a href="#transitioning-to-a-new-nsec5-algorithm" id="transitioning-to-a-new-nsec5-algorithm">Transitioning to a New NSEC5 Algorithm</a></h1>
+<p id="rfc.section.14.5.p.1">Although the NSEC5KEY RR formats include a hash algorithm parameter, this document does not define a particular mechanism for safely transitioning from one NSEC5 algorithm to another.  When specifying a new hash algorithm for use with NSEC5, a transition mechanism MUST also be defined.  It is possible that the only practical and palatable transition mechanisms may require an intermediate transition to an insecure state, or to a state that uses NSEC or NSEC3 records instead of NSEC5.</p>
+<h1 id="rfc.section.15"><a href="#rfc.section.15">15.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a></h1>
+<p id="rfc.section.15.p.1">This document updates the IANA registry "Domain Name System (DNS) Parameters" in subregistry "Resource Record (RR) TYPEs", by defining the following new RR types:</p>
+<p id="rfc.section.15.p.2">NSEC5KEY value XXX.</p>
+<p id="rfc.section.15.p.3">NSEC5 value XXX.</p>
+<p id="rfc.section.15.p.4">NSEC5PROOF value XXX.</p>
+<p id="rfc.section.15.p.5">This document creates a new IANA registry for NSEC5 algorithms.  This registry is named "DNSSEC NSEC5 Algorithms".  The initial content of the registry is:</p>
+<p id="rfc.section.15.p.6">0 is Reserved.</p>
+<p id="rfc.section.15.p.7">1 is RSAFDH-SHA256-SHA256.</p>
+<p id="rfc.section.15.p.8">2 is EC-P256-SHA256.</p>
+<p id="rfc.section.15.p.9">3 is EC-ED25519-SHA256.</p>
+<p id="rfc.section.15.p.10">4-255 is Available for assignment.</p>
+<p id="rfc.section.15.p.11">This document updates the IANA registry "DNS Security Algorithm Numbers" by defining following aliases:</p>
+<p id="rfc.section.15.p.12">XXX is NSEC5-RSASHA256, alias for RSASHA256 (8).</p>
+<p id="rfc.section.15.p.13">XXX is NSEC5-RSASHA512, alias for RSASHA512 (10).</p>
+<p id="rfc.section.15.p.14">XXX is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).</p>
+<p id="rfc.section.15.p.15">XXX is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).</p>
+<h1 id="rfc.section.16"><a href="#rfc.section.16">16.</a> <a href="#contributors" id="contributors">Contributors</a></h1>
+<p id="rfc.section.16.p.1">This document would not be possible without help of Moni Naor (Weizmann Institute), Sachin Vasant (Cisco Systems), Leonid Reyzin (Boston University), and Asaf Ziv (Weizmann Institute) who contributed to the design of NSEC5, and Ondrej Sury (CZ.NIC Labs) who provided advice on its implementation.</p>
+<h1 id="rfc.references"><a href="#rfc.references">17.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">17.1.</a> Normative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="FIPS-186-3">[FIPS-186-3]</b>
+      </td>
+      <td class="top"><a>National Institute for Standards and Technology</a>, "<a>Digital Signature Standard (DSS)</a>", June 2009.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-curdle-dnskey-ed25519">[I-D.ietf-curdle-dnskey-ed25519]</b>
+      </td>
+      <td class="top"><a>Sur&#253;, O.</a> and <a>R. Edmonds</a>, "<a href="http://tools.ietf.org/html/draft-ietf-curdle-dnskey-ed25519-01">Ed25519 for DNSSEC</a>", Internet-Draft draft-ietf-curdle-dnskey-ed25519-01, February 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC1034">[RFC1034]</b>
+      </td>
+      <td class="top"><a>Mockapetris, P.</a>, "<a href="http://tools.ietf.org/html/rfc1034">Domain names - concepts and facilities</a>", STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC1035">[RFC1035]</b>
+      </td>
+      <td class="top"><a>Mockapetris, P.</a>, "<a href="http://tools.ietf.org/html/rfc1035">Domain names - implementation and specification</a>", STD 13, RFC 1035, DOI 10.17487/RFC1035, November 1987.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2119">[RFC2119]</b>
+      </td>
+      <td class="top"><a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2136">[RFC2136]</b>
+      </td>
+      <td class="top"><a>Vixie, P.</a>, <a>Thomson, S.</a>, <a>Rekhter, Y.</a> and <a>J. Bound</a>, "<a href="http://tools.ietf.org/html/rfc2136">Dynamic Updates in the Domain Name System (DNS UPDATE)</a>", RFC 2136, DOI 10.17487/RFC2136, April 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2181">[RFC2181]</b>
+      </td>
+      <td class="top"><a>Elz, R.</a> and <a>R. Bush</a>, "<a href="http://tools.ietf.org/html/rfc2181">Clarifications to the DNS Specification</a>", RFC 2181, DOI 10.17487/RFC2181, July 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2308">[RFC2308]</b>
+      </td>
+      <td class="top"><a>Andrews, M.</a>, "<a href="http://tools.ietf.org/html/rfc2308">Negative Caching of DNS Queries (DNS NCACHE)</a>", RFC 2308, DOI 10.17487/RFC2308, March 1998.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3110">[RFC3110]</b>
+      </td>
+      <td class="top"><a>Eastlake 3rd, D.</a>, "<a href="http://tools.ietf.org/html/rfc3110">RSA/SHA-1 SIGs and RSA KEYs in the Domain Name System (DNS)</a>", RFC 3110, DOI 10.17487/RFC3110, May 2001.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3447">[RFC3447]</b>
+      </td>
+      <td class="top"><a>Jonsson, J.</a> and <a>B. Kaliski</a>, "<a href="http://tools.ietf.org/html/rfc3447">Public-Key Cryptography Standards (PKCS) #1: RSA Cryptography Specifications Version 2.1</a>", RFC 3447, DOI 10.17487/RFC3447, February 2003.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4033">[RFC4033]</b>
+      </td>
+      <td class="top"><a>Arends, R.</a>, <a>Austein, R.</a>, <a>Larson, M.</a>, <a>Massey, D.</a> and <a>S. Rose</a>, "<a href="http://tools.ietf.org/html/rfc4033">DNS Security Introduction and Requirements</a>", RFC 4033, DOI 10.17487/RFC4033, March 2005.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4034">[RFC4034]</b>
+      </td>
+      <td class="top"><a>Arends, R.</a>, <a>Austein, R.</a>, <a>Larson, M.</a>, <a>Massey, D.</a> and <a>S. Rose</a>, "<a href="http://tools.ietf.org/html/rfc4034">Resource Records for the DNS Security Extensions</a>", RFC 4034, DOI 10.17487/RFC4034, March 2005.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4035">[RFC4035]</b>
+      </td>
+      <td class="top"><a>Arends, R.</a>, <a>Austein, R.</a>, <a>Larson, M.</a>, <a>Massey, D.</a> and <a>S. Rose</a>, "<a href="http://tools.ietf.org/html/rfc4035">Protocol Modifications for the DNS Security Extensions</a>", RFC 4035, DOI 10.17487/RFC4035, March 2005.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4648">[RFC4648]</b>
+      </td>
+      <td class="top"><a>Josefsson, S.</a>, "<a href="http://tools.ietf.org/html/rfc4648">The Base16, Base32, and Base64 Data Encodings</a>", RFC 4648, DOI 10.17487/RFC4648, October 2006.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5114">[RFC5114]</b>
+      </td>
+      <td class="top"><a>Lepinski, M.</a> and <a>S. Kent</a>, "<a href="http://tools.ietf.org/html/rfc5114">Additional Diffie-Hellman Groups for Use with IETF Standards</a>", RFC 5114, DOI 10.17487/RFC5114, January 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5155">[RFC5155]</b>
+      </td>
+      <td class="top"><a>Laurie, B.</a>, <a>Sisson, G.</a>, <a>Arends, R.</a> and <a>D. Blacka</a>, "<a href="http://tools.ietf.org/html/rfc5155">DNS Security (DNSSEC) Hashed Authenticated Denial of Existence</a>", RFC 5155, DOI 10.17487/RFC5155, March 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6234">[RFC6234]</b>
+      </td>
+      <td class="top"><a>Eastlake 3rd, D.</a> and <a>T. Hansen</a>, "<a href="http://tools.ietf.org/html/rfc6234">US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)</a>", RFC 6234, DOI 10.17487/RFC6234, May 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6605">[RFC6605]</b>
+      </td>
+      <td class="top"><a>Hoffman, P.</a> and <a>W. Wijngaards</a>, "<a href="http://tools.ietf.org/html/rfc6605">Elliptic Curve Digital Signature Algorithm (DSA) for DNSSEC</a>", RFC 6605, DOI 10.17487/RFC6605, April 2012.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7748">[RFC7748]</b>
+      </td>
+      <td class="top"><a>Langley, A.</a>, <a>Hamburg, M.</a> and <a>S. Turner</a>, "<a href="http://tools.ietf.org/html/rfc7748">Elliptic Curves for Security</a>", RFC 7748, DOI 10.17487/RFC7748, January 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="SECG1">[SECG1]</b>
+      </td>
+      <td class="top"><a>Standards for Efficient Cryptography Group (SECG)</a>, "<a href="http://www.secg.org/sec1-v2.pdf">SEC 1: Elliptic Curve Cryptography</a>"</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">17.2.</a> Informative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="nsec3gpu">[nsec3gpu]</b>
+      </td>
+      <td class="top"><a>Wander, M.</a>, <a>Schwittmann, L.</a>, <a>Boelmann, C.</a> and <a>T. Weis</a>, "<a>GPU-Based NSEC3 Hash Breaking</a>"</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="nsec3walker">[nsec3walker]</b>
+      </td>
+      <td class="top"><a>Bernstein, D.</a>, "<a href="http://dnscurve.org/nsec3walker.html">Nsec3 walker</a>"</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="nsec5">[nsec5]</b>
+      </td>
+      <td class="top"><a>Goldberg, S.</a>, <a>Naor, M.</a>, <a>Papadopoulos, D.</a>, <a>Reyzin, L.</a>, <a>Vasant, S.</a> and <a>A. Ziv</a>, "<a>NSEC5: Provably Preventing DNSSEC Zone Enumeration</a>"</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="nsec5ecc">[nsec5ecc]</b>
+      </td>
+      <td class="top"><a>Goldberg, S.</a>, <a>Naor, M.</a>, <a>Papadopoulos, D.</a> and <a>L. Reyzin</a>, "<a>NSEC5 from Elliptic Curves</a>"</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6781">[RFC6781]</b>
+      </td>
+      <td class="top"><a>Kolkman, O.</a>, <a>Mekking, W.</a> and <a>R. Gieben</a>, "<a href="http://tools.ietf.org/html/rfc6781">DNSSEC Operational Practices, Version 2</a>", RFC 6781, DOI 10.17487/RFC6781, December 2012.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7129">[RFC7129]</b>
+      </td>
+      <td class="top"><a>Gieben, R.</a> and <a>W. Mekking</a>, "<a href="http://tools.ietf.org/html/rfc7129">Authenticated Denial of Existence in the DNS</a>", RFC 7129, DOI 10.17487/RFC7129, February 2014.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#rsa-full-domain-hash-algorithm" id="rsa-full-domain-hash-algorithm">RSA Full Domain Hash Algorithm</a></h1>
+<p id="rfc.section.A.p.1">The Full Domain Hash (FDH) is a RSA-based scheme that allows authentication of hashes using public-key cryptography.</p>
+<p id="rfc.section.A.p.2">In this document, the notation from <a href="#RFC3447">[RFC3447]</a> is used.</p>
+<p id="rfc.section.A.p.3">Used parameters:</p>
+<pre>
+  (n, e) - RSA public key
+
+  K - RSA private key
+
+  k - length of the RSA modulus n in octets
+</pre>
+<p id="rfc.section.A.p.4">Fixed options:</p>
+<pre>
+  Hash - hash function to be used with MGF1
+</pre>
+<p id="rfc.section.A.p.5">Used primitives:</p>
+<p/>
+
+<dl>
+  <dt>I2OSP -</dt>
+  <dd style="margin-left: 8">Coversion of a nonnegative integer to an octet string as defined in Section 4.1 of <a href="#RFC3447">[RFC3447]</a></dd>
+  <dt>OS2IP -</dt>
+  <dd style="margin-left: 8">Coversion of an octet string to a nonnegative integer as defined in Section 4.2 of <a href="#RFC3447">[RFC3447]</a></dd>
+  <dt>RSASP1 -</dt>
+  <dd style="margin-left: 8">RSA signature primitive as defined in Section 5.2.1 of <a href="#RFC3447">[RFC3447]</a></dd>
+  <dt>RSAVP1 -</dt>
+  <dd style="margin-left: 8">RSA verification primitive as defined in Section 5.2.2 of <a href="#RFC3447">[RFC3447]</a></dd>
+  <dt>MGF1 -</dt>
+  <dd style="margin-left: 8">Mask Generation Function based on a hash function as defined in Section B.2.1 of <a href="#RFC3447">[RFC3447]</a></dd>
+</dl>
+<h1 id="rfc.appendix.A.1"><a href="#rfc.appendix.A.1">A.1.</a> <a href="#fdh-signature" id="fdh-signature">FDH signature</a></h1>
+<p id="rfc.section.A.1.p.1">FDH_SIGN(K, M)</p>
+<p id="rfc.section.A.1.p.2">Input:</p>
+<pre>
+  K - RSA private key
+
+  M - message to be signed, an octet string
+</pre>
+<p id="rfc.section.A.1.p.3">Output:</p>
+<pre>
+  S - signature, an octet string of length k
+</pre>
+<p id="rfc.section.A.1.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>EM = MGF1(M, k - 1)</li>
+  <li>m = OS2IP(EM)</li>
+  <li>s = RSASP1(K, m)</li>
+  <li>S = I2OSP(s, k)</li>
+  <li>Output S</li>
+</ol>
+<h1 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#fdh-verification" id="fdh-verification">FDH verification</a></h1>
+<p id="rfc.section.A.2.p.1">FDH_VERIFY((n, e), M, S)</p>
+<p id="rfc.section.A.2.p.2">Input:</p>
+<pre>
+  (n, e) - RSA public key
+
+  M - message whose signature is to be verified, an octet string
+
+  S - signature to be verified, an octet string of length k
+</pre>
+<p id="rfc.section.A.2.p.3">Output:</p>
+<pre>
+  "valid signature" or "invalid signature"
+</pre>
+<p id="rfc.section.A.2.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>s = OS2IP(S)</li>
+  <li>m = RSAVP1((n, e), s)</li>
+  <li>EM = I2OSP(m, k - 1)</li>
+  <li>EM' = MGF1(M, k - 1)</li>
+  <li>If EM and EM' are the same, output "valid signature"; else output "invalid signature".</li>
+</ol>
+<h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#elliptic-curve-vrf" id="elliptic-curve-vrf">Elliptic Curve VRF</a></h1>
+<p id="rfc.section.B.p.1">The Elliptic Curve Verifiable Random Function (VRF) is a EC-based scheme that allows authentication of hashes using public-key cryptography.</p>
+<p id="rfc.section.B.p.2">Fixed options:</p>
+<pre>
+  G - EC group
+</pre>
+<p id="rfc.section.B.p.3">Used parameters:</p>
+<pre>
+  g^x - EC public key
+
+  x - EC private key
+
+  q - primer order of group G
+
+  g - generator of group G
+</pre>
+<p id="rfc.section.B.p.4">Used primitives:</p>
+<p/>
+
+<dl>
+  <dt>"" -</dt>
+  <dd style="margin-left: 8">empty octet string</dd>
+  <dt>|| -</dt>
+  <dd style="margin-left: 8">octet string concatenation</dd>
+  <dt>p^k -</dt>
+  <dd style="margin-left: 8">EC point multiplication</dd>
+  <dt>p1*p2 -</dt>
+  <dd style="margin-left: 8">EC point addition</dd>
+  <dt>SHA256 -</dt>
+  <dd style="margin-left: 8">hash function SHA-256 as specified in <a href="#RFC6234">[RFC6234]</a></dd>
+  <dt>ECP2OS -</dt>
+  <dd style="margin-left: 8">EC point to octet string conversion with point compression as specified in Section 2.3.3 of <a href="#SECG1">[SECG1]</a></dd>
+  <dt>OS2ECP -</dt>
+  <dd style="margin-left: 8">octet string to EC point conversion with point compression as specified in Section 2.3.4 of <a href="#SECG1">[SECG1]</a></dd>
+</dl>
+<h1 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#ecvrf-hash-to-curve" id="ecvrf-hash-to-curve">ECVRF Hash To Curve</a></h1>
+<p id="rfc.section.B.1.p.1">ECVRF_hash_to_curve(m)</p>
+<p id="rfc.section.B.1.p.2">Input:</p>
+<pre>
+  m - value to be hashed, an octet string
+</pre>
+<p id="rfc.section.B.1.p.3">Output:</p>
+<pre>
+  h - hashed value, EC point
+</pre>
+<p id="rfc.section.B.1.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>c = 0</li>
+  <li>C = I2OSP(c, 4)</li>
+  <li>xc = SHA256(m || C)</li>
+  <li>p = 0x02 || xc</li>
+  <li>If p is not a valid octet string representing encoded compressed point in G:  <br/><br/> A.  c = c + 1  <br/><br/> B.  Go to step 2.</li>
+  <li>h = OS2ECP(p)</li>
+  <li>Output h</li>
+</ol>
+<h1 id="rfc.appendix.B.2"><a href="#rfc.appendix.B.2">B.2.</a> <a href="#ecvrf-auxiliary-functions" id="ecvrf-auxiliary-functions">ECVRF Auxiliary Functions</a></h1>
+<h1 id="rfc.appendix.B.2.1"><a href="#rfc.appendix.B.2.1">B.2.1.</a> <a href="#ecvrf-hash-points" id="ecvrf-hash-points">ECVRF Hash Points</a></h1>
+<p id="rfc.section.B.2.1.p.1">ECVRF_hash_points(p_1, p_2, &#8230;, p_n)</p>
+<p id="rfc.section.B.2.1.p.2">Input:</p>
+<pre>
+  p_x - EC point in G
+</pre>
+<p id="rfc.section.B.2.1.p.3">Output:</p>
+<pre>
+  h - hash value, integer between 0 and 2^128-1
+</pre>
+<p id="rfc.section.B.2.1.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>P = ""</li>
+  <li>for p in [p_1, p_2, &#8230; p_n]: P = P || ECP2OS(p)</li>
+  <li>h' = SHA256(P)</li>
+  <li>h = OS2IP(first 16 octets of h')</li>
+  <li>Output h</li>
+</ol>
+<h1 id="rfc.appendix.B.2.2"><a href="#rfc.appendix.B.2.2">B.2.2.</a> <a href="#ecvrf-proof-to-hash" id="ecvrf-proof-to-hash">ECVRF Proof To Hash</a></h1>
+<p id="rfc.section.B.2.2.p.1">ECVRF_proof_to_hash(gamma)</p>
+<p id="rfc.section.B.2.2.p.2">Input:</p>
+<pre>
+  gamma - VRF proof, EC point in G with coordinates (x, y)
+</pre>
+<p id="rfc.section.B.2.2.p.3">Output:</p>
+<pre>
+  beta - VRF hash, octet string (32 octets)
+</pre>
+<p id="rfc.section.B.2.2.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>beta = I2OSP(x, 32)</li>
+  <li>Output beta</li>
+</ol>
+<p id="rfc.section.B.2.2.p.6">Note: Because of the format of compressed form of an elliptic curve, the hash can be retrieved from an encoded gamma simply by omitting the first octet of the gamma.</p>
+<h1 id="rfc.appendix.B.2.3"><a href="#rfc.appendix.B.2.3">B.2.3.</a> <a href="#ecvrf-decode-proof" id="ecvrf-decode-proof">ECVRF Decode Proof</a></h1>
+<p id="rfc.section.B.2.3.p.1">ECVRF_decode_proof(pi)</p>
+<p id="rfc.section.B.2.3.p.2">Input:</p>
+<pre>
+  pi - VRF proof, octet string (81 octets)
+</pre>
+<p id="rfc.section.B.2.3.p.3">Output:</p>
+<pre>
+  gamma - EC point
+
+  c - integer between 0 and 2^128-1
+
+  s - integer between 0 and 2^256-1
+</pre>
+<p id="rfc.section.B.2.3.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>let gamma', c', s' be pi split after 33-rd and 49-th octet</li>
+  <li>gamma = OS2ECP(gamma')</li>
+  <li>c = OS2IP(c')</li>
+  <li>s = OS2IP(s')</li>
+  <li>Output gamma, c, and s</li>
+</ol>
+<h1 id="rfc.appendix.B.3"><a href="#rfc.appendix.B.3">B.3.</a> <a href="#ecvrf-signing" id="ecvrf-signing">ECVRF Signing</a></h1>
+<p id="rfc.section.B.3.p.1">ECVRF_sign(g^x, x, alpha)</p>
+<p id="rfc.section.B.3.p.2">Input:</p>
+<pre>
+  g^x - EC public key
+
+  x - EC private key
+
+  alpha - message to be signed, octet string
+</pre>
+<p id="rfc.section.B.3.p.3">Output:</p>
+<pre>
+  pi - VRF proof, octet string (81 octets)
+
+  beta - VRF hash, octet string (32 octets)
+</pre>
+<p id="rfc.section.B.3.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>h = ECVRF_hash_to_curve(alpha)</li>
+  <li>gamma = h^x</li>
+  <li>choose a nonce k from [0, q-1]</li>
+  <li>c = ECVRF_hash_points(g, h, g^x, h^x, g^k, h^k)</li>
+  <li>s = k - c*q mod q</li>
+  <li>pi = ECP2OS(gamma) || I2OSP(c, 16) || I2OSP(s, 32)</li>
+  <li>beta = h2(gamma)</li>
+  <li>Output pi and beta</li>
+</ol>
+<h1 id="rfc.appendix.B.4"><a href="#rfc.appendix.B.4">B.4.</a> <a href="#ecvrf-verification" id="ecvrf-verification">ECVRF Verification</a></h1>
+<p id="rfc.section.B.4.p.1">ECVRF_VERIFY(g^x, pi, alpha)</p>
+<p id="rfc.section.B.4.p.2">Input:</p>
+<pre>
+  g^x - EC public key
+
+  pi - VRF proof, octet string
+
+  alpha - message to verify, octet string
+</pre>
+<p id="rfc.section.B.4.p.3">Output:</p>
+<pre>
+  "valid signature" or "invalid signature"
+
+  beta - VRF hash, octet string (32 octets)
+</pre>
+<p id="rfc.section.B.4.p.4">Steps:</p>
+<p/>
+
+<ol>
+  <li>gamma, c, s = ECVRF_decode_proof(pi)</li>
+  <li>u = (g^x)^c * g^s</li>
+  <li>h = ECVRF_hash_to_curve(alpha)</li>
+  <li>v = gamma^c * h^s</li>
+  <li>c' = ECVRF_hash_points(g, h, g^x, gamma, u, v)</li>
+  <li>beta = ECVRF_proof_to_hash(gamma)</li>
+  <li>If c and c' are the same, output "valid signature"; else output "invalid signature".  Output beta.</li>
+</ol>
+<p id="rfc.section.B.4.p.6">[[CREF1: TODO: check validity of gamma before hashing --Jan]]</p>
+<h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
+<p id="rfc.section.C.p.1">Note to RFC Editor: if this document does not obsolete an existing RFC, please remove this appendix before publication as an RFC.</p>
+<p/>
+
+<dl>
+  <dt>pre 00 -</dt>
+  <dd style="margin-left: 8">initial version of the document submitted to mailing list only</dd>
+  <dt>00 -</dt>
+  <dd style="margin-left: 8">fix NSEC5KEY rollover mechanism, clarify NSEC5PROOF RDATA, clarify inputs and outputs for NSEC5 proof and NSEC5 hash computation</dd>
+  <dt>01 -</dt>
+  <dd style="margin-left: 8">added Performance Considerations section</dd>
+  <dt>02 -</dt>
+  <dd style="margin-left: 8">Elliptic Curve based VRF for NSEC5 proofs; response sizes based on empirical data</dd>
+</dl>
+<h1 id="rfc.appendix.D"><a href="#rfc.appendix.D">Appendix D.</a> <a href="#open-issues" id="open-issues">Open Issues</a></h1>
+<p id="rfc.section.D.p.1">Note to RFC Editor: please remove this appendix before publication as an RFC.</p>
+<p/>
+
+<ol>
+  <li>Consider alternative way to signalize NSEC5 support.  The NSEC5 could use only one DNSSEC algorithm identifier, and the actual algorithm to be used for signing can be the first octet in DNSKEY public key field and RRSIG signature field.  Similar approach is used by PRIVATEDNS and PRIVATEOID defined in <a href="#RFC4034">[RFC4034]</a>.</li>
+  <li>How to add new NSEC5 hashing algorithm.  We will need to add new DNSSEC algorithm identifiers again.</li>
+  <li>NSEC and NSEC3 define optional steps for hash collisions detection.  We don't have a way to avoid them if they really appear (unlikely).  We would have to drop the signing key and generate a new one.  Which cannot be done instantly.</li>
+  <li>Write Special Considerations section.</li>
+  <li>Contributor list has to be completed.</li>
+</ol>
+<h1 id="rfc.authors">
+  <a href="#rfc.authors">Authors' Addresses</a>
+</h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Jan Vcelak</span> 
+	  <span class="n hidden">
+		<span class="family-name">Vcelak</span>
+	  </span>
+	</span>
+	<span class="org vcardline">CZ.NIC</span>
+	<span class="adr">
+	  <span class="vcardline">Milesovska 1136/5</span>
+
+	  <span class="vcardline">
+		<span class="locality">Praha</span>,  
+		<span class="region"></span>
+		<span class="code">130 00</span>
+	  </span>
+	  <span class="country-name vcardline">CZ</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:jan.vcelak@nic.cz">jan.vcelak@nic.cz</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Sharon Goldberg</span> 
+	  <span class="n hidden">
+		<span class="family-name">Goldberg</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Boston University</span>
+	<span class="adr">
+	  <span class="vcardline">111 Cummington St, MCS135</span>
+
+	  <span class="vcardline">
+		<span class="locality">Boston,</span>,  
+		<span class="region"></span>
+		<span class="code">MA 02215</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:goldbe@cs.bu.edu">goldbe@cs.bu.edu</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Dimitrios Papadopoulos</span> 
+	  <span class="n hidden">
+		<span class="family-name">Papadopoulos</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Boston University</span>
+	<span class="adr">
+	  <span class="vcardline">111 Cummington St, MCS135</span>
+
+	  <span class="vcardline">
+		<span class="locality">Boston,</span>,  
+		<span class="region"></span>
+		<span class="code">MA 02215</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:dipapado@bu.edu">dipapado@bu.edu</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
