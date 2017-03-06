@@ -32,7 +32,7 @@ author:
     name: Sharon Goldberg
     org: Boston University
     street: 111 Cummington St, MCS135
-    city: Boston,
+    city: Boston
     code: MA 02215
     country: USA
     email: goldbe@cs.bu.edu
@@ -42,7 +42,7 @@ author:
     name: Dimitrios Papadopoulos
     org: Boston University
     street: 111 Cummington St, MCS135
-    city: Boston,
+    city: Boston
     code: MA 02215
     country: USA
     email: dipapado@bu.edu
@@ -51,7 +51,7 @@ author:
     name: Shumon Huque
     org: Salesforce
     street: 2550 Wasser Terr
-    city: Herndon,
+    city: Herndon
     code: VA 20171
     country: USA
     email: shuque@gmail.com
@@ -204,10 +204,12 @@ allows for the entire zone contents to be enumerated if a server is
 queried for carefully chosen domain names; N queries suffice to
 enumerate a zone containing N names.  The NSEC3 RR adds domain-name
 hashing, which makes the zone enumeration harder, but not impossible.
-This document introduces NSEC5, which provides an cryptographically-
-proven mechanism that prevents zone enumeration.  NSEC5 has the
-additional advantage of not requiring private zone-signing keys to be
-present on all authoritative servers for the zone.
+This document introduces NSEC5, which provides a
+cryptographically-proven mechanism that prevents zone enumeration by
+the use of verifiable random functions.  NSEC5 has the additional
+advantage of not requiring private zone-signing keys to be present on
+all authoritative servers for the zone, in contrast to online signing
+schemes like NSEC3 white lies.
 
 --- middle
 
@@ -261,7 +263,7 @@ following those in the most-recently retrieved NSEC record. N queries
 suffice to enumerate a zone containing N names.  Several publicly
 available network reconnaissance tools use NSEC records to launch
 zone-enumeration attacks (e.g., {{nmap-nsec-enum}} {{nsec3map}}
-{{ldns-walk}}.
+{{ldns-walk}}).
 
 When offline signing with NSEC3 is used, the original domain names in
 the NSEC chain are replaced by their cryptographic hashes. Offline
@@ -573,7 +575,8 @@ The Wildcard flag indicates that a wildcard synthesis is possible at
 the original domain name level (i.e., there is a wildcard node
 immediately descending from the immediate ancestor of the original
 domain name).  The purpose of the Wildcard flag is to reduce a maximum
-number of RRs required for authenticated denial of existence proof.
+number of RRs required for authenticated denial of existence proof, as
+originally described in {{?I-D.gieben-nsec4}} Section 7.2.1.
 
 ## NSEC5 RDATA Presentation Format
 
@@ -905,7 +908,8 @@ for one signed zone.
 
 NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other
 authenticated denial of existence mechanism that allows for
-enumeration of zone contents.
+enumeration of zone contents, as that would defeat the principal
+security goal of NSEC5.
 
 Similarly to NSEC3, the owner names of NSEC5 RRs are not represented
 in the NSEC5 chain and therefore NSEC5 records deny their own
@@ -955,9 +959,12 @@ such zones.
 
 ## Dynamic Updates
 
-A zone signed using NSEC5 MAY accept dynamic updates.  The changes to
-the zone MUST be performed in a way, that the zone satisfies the
-properties specified in Section 9.1 at any time.
+A zone signed using NSEC5 MAY accept dynamic updates {{RFC2136}}.  The
+changes to the zone MUST be performed in a way, that the zone
+satisfies the properties specified in Section 9.1 at any time.  The
+process described in {{RFC5155}} Section 7.5 describes how to handle
+the issues surrouding the handling of empty non-terminals as well as
+Opt-Out.
 
 It is RECOMMENDED that the server rejects all updates containing
 changes to the NSEC5 chain (or related RRSIG RRs) and performs itself
@@ -1169,11 +1176,11 @@ This document updates the IANA registry "Domain Name System (DNS)
 Parameters" in subregistry "Resource Record (RR) TYPEs", by defining
 the following new RR types:
 
-   NSEC5KEY value XXX.
+   NSEC5KEY value TBD.
 
-   NSEC5 value XXX.
+   NSEC5 value TBD.
 
-   NSEC5PROOF value XXX.
+   NSEC5PROOF value TBD.
 
 This document creates a new IANA registry for NSEC5 algorithms.  This
 registry is named "DNSSEC NSEC5 Algorithms".  The initial content of
@@ -1192,21 +1199,29 @@ the registry is:
 This document updates the IANA registry "DNS Security Algorithm
 Numbers" by defining following aliases:
 
-   XXX is NSEC5-RSASHA256, alias for RSASHA256 (8).
+   TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).
 
-   XXX is NSEC5-RSASHA512, alias for RSASHA512 (10).
+   TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).
 
-   XXX is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).
+   TBD is NSEC5-ECDSAP256SHA256, alias for ECDSAP256SHA256 (13).
 
-   XXX is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).
+   TBD is NSEC5-ECDSAP384SHA384, alias for ECDSAP384SHA384 (14).
+
+   TBD is NSEC5-ED25519, alias for ED25519 (15).
+
+# Implementation Status
+
+NSEC5 has been implemented for the Knot Authoritative server and the
+Unbound recursive server.
 
 # Contributors
 
 This document would not be possible without help of Moni Naor
 (Weizmann Institute), Sachin Vasant (Cisco Systems), Leonid Reyzin
 (Boston University), and Asaf Ziv (Weizmann Institute) who contributed
-to the design of NSEC5, and Ondrej Sury (CZ.NIC Labs) who provided
-advice on its implementation.
+to the design of NSEC5; Ondrej Sury (CZ.NIC Labs) who provided advice
+on its implementation; and Duane Wessels (Verisign Labs) who assisted
+in the research of the practicality of NSEC5.
 
 --- back
 

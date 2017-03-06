@@ -24,10 +24,12 @@ Abstract
    queried for carefully chosen domain names; N queries suffice to
    enumerate a zone containing N names.  The NSEC3 RR adds domain-name
    hashing, which makes the zone enumeration harder, but not impossible.
-   This document introduces NSEC5, which provides an cryptographically-
-   proven mechanism that prevents zone enumeration.  NSEC5 has the
-   additional advantage of not requiring private zone-signing keys to be
-   present on all authoritative servers for the zone.
+   This document introduces NSEC5, which provides a cryptographically-
+   proven mechanism that prevents zone enumeration by the use of
+   verifiable random functions.  NSEC5 has the additional advantage of
+   not requiring private zone-signing keys to be present on all
+   authoritative servers for the zone, in contrast to online signing
+   schemes like NSEC3 white lies.
 
 Status of This Memo
 
@@ -45,8 +47,6 @@ Status of This Memo
    material or to cite them other than as "work in progress."
 
    This Internet-Draft will expire on September 6, 2017.
-
-
 
 
 
@@ -132,24 +132,25 @@ Internet-Draft                    NSEC5                       March 2017
      14.4.  Key Length Considerations  . . . . . . . . . . . . . . .  23
      14.5.  Transitioning to a New NSEC5 Algorithm . . . . . . . . .  24
    15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
-   16. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  25
-   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
-     17.1.  Normative References . . . . . . . . . . . . . . . . . .  25
-     17.2.  Informative References . . . . . . . . . . . . . . . . .  27
+   16. Implementation Status . . . . . . . . . . . . . . . . . . . .  25
+   17. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  25
+   18. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
+     18.1.  Normative References . . . . . . . . . . . . . . . . . .  25
+     18.2.  Informative References . . . . . . . . . . . . . . . . .  27
    Appendix A.  RSA Full Domain Hash Algorithm . . . . . . . . . . .  28
      A.1.  FDH signature . . . . . . . . . . . . . . . . . . . . . .  29
      A.2.  FDH verification  . . . . . . . . . . . . . . . . . . . .  29
    Appendix B.  Elliptic Curve VRF . . . . . . . . . . . . . . . . .  30
      B.1.  ECVRF Hash To Curve . . . . . . . . . . . . . . . . . . .  31
-     B.2.  ECVRF Auxiliary Functions . . . . . . . . . . . . . . . .  31
-       B.2.1.  ECVRF Hash Points . . . . . . . . . . . . . . . . . .  31
+     B.2.  ECVRF Auxiliary Functions . . . . . . . . . . . . . . . .  32
+       B.2.1.  ECVRF Hash Points . . . . . . . . . . . . . . . . . .  32
        B.2.2.  ECVRF Proof To Hash . . . . . . . . . . . . . . . . .  32
-       B.2.3.  ECVRF Decode Proof  . . . . . . . . . . . . . . . . .  32
+       B.2.3.  ECVRF Decode Proof  . . . . . . . . . . . . . . . . .  33
      B.3.  ECVRF Signing . . . . . . . . . . . . . . . . . . . . . .  33
      B.4.  ECVRF Verification  . . . . . . . . . . . . . . . . . . .  34
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  34
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  35
    Appendix D.  Open Issues  . . . . . . . . . . . . . . . . . . . .  35
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  36
 
 1.  Introduction
 
@@ -159,9 +160,8 @@ Internet-Draft                    NSEC5                       March 2017
    existence for the DNS Security Extensions (DNSSEC).  NSEC5 has two
    key security properties.
 
-   First, NSEC5 protects the integrity of the zone contents even if an
-   adversary compromises one of the authoritative nameservers for the
-   zone.
+
+
 
 
 
@@ -169,6 +169,10 @@ Vcelak, et al.          Expires September 6, 2017               [Page 3]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   First, NSEC5 protects the integrity of the zone contents even if an
+   adversary compromises one of the authoritative nameservers for the
+   zone.
 
    Second, NSEC5 prevents offline zone enumeration, where an adversary
    makes a small number of online DNS queries and then processes them
@@ -214,10 +218,6 @@ Internet-Draft                    NSEC5                       March 2017
    following those in the most-recently retrieved NSEC record.  N
    queries suffice to enumerate a zone containing N names.  Several
    publicly available network reconnaissance tools use NSEC records to
-   launch zone-enumeration attacks (e.g., [nmap-nsec-enum] [nsec3map]
-   [ldns-walk].
-
-
 
 
 
@@ -225,6 +225,9 @@ Vcelak, et al.          Expires September 6, 2017               [Page 4]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   launch zone-enumeration attacks (e.g., [nmap-nsec-enum] [nsec3map]
+   [ldns-walk]).
 
    When offline signing with NSEC3 is used, the original domain names in
    the NSEC chain are replaced by their cryptographic hashes.  Offline
@@ -271,9 +274,6 @@ Internet-Draft                    NSEC5                       March 2017
 
    For every query that elicilits a denying response, the authoratitive
    nameserver hashes the query on-the-fly using the secret VRF key, and
-   then returns the corresponding precomputed NSEC5 record.  As such,
-   the nameserver must perform an online cryptographic computation for
-   every denying NSEC5 response.
 
 
 
@@ -281,6 +281,10 @@ Vcelak, et al.          Expires September 6, 2017               [Page 5]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   then returns the corresponding precomputed NSEC5 record.  As such,
+   the nameserver must perform an online cryptographic computation for
+   every denying NSEC5 response.
 
    Notice that online signing (e.g.  NSEC3 White Lies) also has this
    requirement.  This is not a coincidence: [nsec5] proved that any
@@ -326,10 +330,6 @@ Internet-Draft                    NSEC5                       March 2017
       NSEC5 proof is known, anyone can compute and verify it's NSEC5
       hash.
 
-   NSEC5 algorithm:  A pair of algorithms used to compute NSEC5 proofs
-      and NSEC5 hashes.
-
-
 
 
 
@@ -337,6 +337,9 @@ Vcelak, et al.          Expires September 6, 2017               [Page 6]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   NSEC5 algorithm:  A pair of algorithms used to compute NSEC5 proofs
+      and NSEC5 hashes.
 
 2.  Backward Compatibility
 
@@ -384,9 +387,6 @@ Internet-Draft                    NSEC5                       March 2017
    chain.  That is, all the NSEC5 hashes for a zone are sorted in their
    canonical order, and each consecutive pair forms an NSEC5 RR.
 
-   To prove an non-existence of a particular domain name in response to
-   a query, the server computes the NSEC5 proof (using the private NSEC5
-
 
 
 Vcelak, et al.          Expires September 6, 2017               [Page 7]
@@ -394,6 +394,8 @@ Vcelak, et al.          Expires September 6, 2017               [Page 7]
 Internet-Draft                    NSEC5                       March 2017
 
 
+   To prove an non-existence of a particular domain name in response to
+   a query, the server computes the NSEC5 proof (using the private NSEC5
    key) on the fly.  Then it uses the NSEC5 proof to compute the
    corresponding NSEC5 hash.  It then identifies the NSEC5 RR that
    covers the NSEC5 hash.  In the response message, the server returns
@@ -440,8 +442,6 @@ Internet-Draft                    NSEC5                       March 2017
 
    o  NSEC5 proof is computed using an Elliptic Curve VRF with FIPS
       186-3 P-256 curve.  The proof computation and verification is
-      formally specified in Appendix B.  The curve parameters are
-
 
 
 
@@ -450,6 +450,7 @@ Vcelak, et al.          Expires September 6, 2017               [Page 8]
 Internet-Draft                    NSEC5                       March 2017
 
 
+      formally specified in Appendix B.  The curve parameters are
       specified in [FIPS-186-3] (Section D.1.2.3) and [RFC5114]
       (Section 2.6).
 
@@ -493,7 +494,6 @@ Internet-Draft                    NSEC5                       March 2017
 
    Public Key is a variable sized field holding public key material for
    NSEC5 proof verification.
-
 
 
 
@@ -589,7 +589,7 @@ Internet-Draft                    NSEC5                       March 2017
    immediately descending from the immediate ancestor of the original
    domain name).  The purpose of the Wildcard flag is to reduce a
    maximum number of RRs required for authenticated denial of existence
-   proof.
+   proof, as originally described in [I-D.gieben-nsec4] Section 7.2.1.
 
 6.3.  NSEC5 RDATA Presentation Format
 
@@ -988,7 +988,8 @@ Internet-Draft                    NSEC5                       March 2017
 
    NSEC5 MUST NOT be used in parallel with NSEC, NSEC3, or any other
    authenticated denial of existence mechanism that allows for
-   enumeration of zone contents.
+   enumeration of zone contents, as that would defeat the principal
+   security goal of NSEC5.
 
    Similarly to NSEC3, the owner names of NSEC5 RRs are not represented
    in the NSEC5 chain and therefore NSEC5 records deny their own
@@ -1001,7 +1002,6 @@ Internet-Draft                    NSEC5                       March 2017
    The NSEC5KEY rollover mechanism is similar to "Pre-Publish Zone
    Signing Key Rollover" as specified in [RFC6781].  The NSEC5KEY
    rollover MUST be performed as a sequence of the following steps:
-
 
 
 
@@ -1046,16 +1046,16 @@ Internet-Draft                    NSEC5                       March 2017
 
 9.7.  Dynamic Updates
 
-   A zone signed using NSEC5 MAY accept dynamic updates.  The changes to
-   the zone MUST be performed in a way, that the zone satisfies the
-   properties specified in Section 9.1 at any time.
+   A zone signed using NSEC5 MAY accept dynamic updates [RFC2136].  The
+   changes to the zone MUST be performed in a way, that the zone
+   satisfies the properties specified in Section 9.1 at any time.  The
+   process described in [RFC5155] Section 7.5 describes how to handle
+   the issues surrouding the handling of empty non-terminals as well as
+   Opt-Out.
 
    It is RECOMMENDED that the server rejects all updates containing
    changes to the NSEC5 chain (or related RRSIG RRs) and performs itself
    any required alternations of the NSEC5 chain induced by the update.
-
-   Alternatively, the server MUST verify that all the properties are
-   satisfied prior to performing the update atomically.
 
 
 
@@ -1065,6 +1065,9 @@ Vcelak, et al.          Expires September 6, 2017              [Page 19]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   Alternatively, the server MUST verify that all the properties are
+   satisfied prior to performing the update atomically.
 
 10.  Resolver Considerations
 
@@ -1110,9 +1113,6 @@ Internet-Draft                    NSEC5                       March 2017
 
    4.  Validate the signature of the NSEC5 RR.
 
-   If the NSEC5 RR fails to validate, it MUST be ignored.  If some of
-   the conditions required for an NSEC5 proof is not satisfied, the
-   response MUST be treated as bogus.
 
 
 
@@ -1121,6 +1121,10 @@ Vcelak, et al.          Expires September 6, 2017              [Page 20]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   If the NSEC5 RR fails to validate, it MUST be ignored.  If some of
+   the conditions required for an NSEC5 proof is not satisfied, the
+   response MUST be treated as bogus.
 
    Notice that determining closest encloser and next closer name in
    NSEC5 is easier than in NSEC3.  NSEC5 and NSEC5PROOF RRs are always
@@ -1165,10 +1169,6 @@ Internet-Draft                    NSEC5                       March 2017
    2.  Wait for NSEC5 RRs expiration in caches.
 
    3.  Remove NSEC5KEY RR from the zone.
-
-
-
-
 
 
 
@@ -1310,11 +1310,11 @@ Internet-Draft                    NSEC5                       March 2017
    Parameters" in subregistry "Resource Record (RR) TYPEs", by defining
    the following new RR types:
 
-   NSEC5KEY value XXX.
+   NSEC5KEY value TBD.
 
-   NSEC5 value XXX.
+   NSEC5 value TBD.
 
-   NSEC5PROOF value XXX.
+   NSEC5PROOF value TBD.
 
    This document creates a new IANA registry for NSEC5 algorithms.  This
    registry is named "DNSSEC NSEC5 Algorithms".  The initial content of
@@ -1333,11 +1333,11 @@ Internet-Draft                    NSEC5                       March 2017
    This document updates the IANA registry "DNS Security Algorithm
    Numbers" by defining following aliases:
 
-   XXX is NSEC5-RSASHA256, alias for RSASHA256 (8).
+   TBD is NSEC5-RSASHA256, alias for RSASHA256 (8).
 
-   XXX is NSEC5-RSASHA512, alias for RSASHA512 (10).
+   TBD is NSEC5-RSASHA512, alias for RSASHA512 (10).
 
-   XXX is NSEC5-ECDSAP256SHA256 alias for ECDSAP256SHA256 (13).
+   TBD is NSEC5-ECDSAP256SHA256, alias for ECDSAP256SHA256 (13).
 
 
 
@@ -1346,19 +1346,27 @@ Vcelak, et al.          Expires September 6, 2017              [Page 24]
 Internet-Draft                    NSEC5                       March 2017
 
 
-   XXX is NSEC5-ECDSAP384SHA384 alias for ECDSAP384SHA384 (14).
+   TBD is NSEC5-ECDSAP384SHA384, alias for ECDSAP384SHA384 (14).
 
-16.  Contributors
+   TBD is NSEC5-ED25519, alias for ED25519 (15).
+
+16.  Implementation Status
+
+   NSEC5 has been implemented for the Knot Authoritative server and the
+   Unbound recursive server.
+
+17.  Contributors
 
    This document would not be possible without help of Moni Naor
    (Weizmann Institute), Sachin Vasant (Cisco Systems), Leonid Reyzin
    (Boston University), and Asaf Ziv (Weizmann Institute) who
-   contributed to the design of NSEC5, and Ondrej Sury (CZ.NIC Labs) who
-   provided advice on its implementation.
+   contributed to the design of NSEC5; Ondrej Sury (CZ.NIC Labs) who
+   provided advice on its implementation; and Duane Wessels (Verisign
+   Labs) who assisted in the research of the practicality of NSEC5.
 
-17.  References
+18.  References
 
-17.1.  Normative References
+18.1.  Normative References
 
    [FIPS-186-3]
               National Institute for Standards and Technology, "Digital
@@ -1386,14 +1394,6 @@ Internet-Draft                    NSEC5                       March 2017
               Specification", RFC 2181, DOI 10.17487/RFC2181, July 1997,
               <http://www.rfc-editor.org/info/rfc2181>.
 
-   [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
-              NCACHE)", RFC 2308, DOI 10.17487/RFC2308, March 1998,
-              <http://www.rfc-editor.org/info/rfc2308>.
-
-   [RFC3110]  Eastlake 3rd, D., "RSA/SHA-1 SIGs and RSA KEYs in the
-              Domain Name System (DNS)", RFC 3110, DOI 10.17487/RFC3110,
-              May 2001, <http://www.rfc-editor.org/info/rfc3110>.
-
 
 
 
@@ -1401,6 +1401,14 @@ Vcelak, et al.          Expires September 6, 2017              [Page 25]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   [RFC2308]  Andrews, M., "Negative Caching of DNS Queries (DNS
+              NCACHE)", RFC 2308, DOI 10.17487/RFC2308, March 1998,
+              <http://www.rfc-editor.org/info/rfc2308>.
+
+   [RFC3110]  Eastlake 3rd, D., "RSA/SHA-1 SIGs and RSA KEYs in the
+              Domain Name System (DNS)", RFC 3110, DOI 10.17487/RFC3110,
+              May 2001, <http://www.rfc-editor.org/info/rfc3110>.
 
    [RFC3447]  Jonsson, J. and B. Kaliski, "Public-Key Cryptography
               Standards (PKCS) #1: RSA Cryptography Specifications
@@ -1441,14 +1449,6 @@ Internet-Draft                    NSEC5                       March 2017
               DOI 10.17487/RFC6234, May 2011,
               <http://www.rfc-editor.org/info/rfc6234>.
 
-   [RFC6605]  Hoffman, P. and W. Wijngaards, "Elliptic Curve Digital
-              Signature Algorithm (DSA) for DNSSEC", RFC 6605,
-              DOI 10.17487/RFC6605, April 2012,
-              <http://www.rfc-editor.org/info/rfc6605>.
-
-   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
-              for Security", RFC 7748, DOI 10.17487/RFC7748, January
-              2016, <http://www.rfc-editor.org/info/rfc7748>.
 
 
 
@@ -1457,6 +1457,15 @@ Vcelak, et al.          Expires September 6, 2017              [Page 26]
 
 Internet-Draft                    NSEC5                       March 2017
 
+
+   [RFC6605]  Hoffman, P. and W. Wijngaards, "Elliptic Curve Digital
+              Signature Algorithm (DSA) for DNSSEC", RFC 6605,
+              DOI 10.17487/RFC6605, April 2012,
+              <http://www.rfc-editor.org/info/rfc6605>.
+
+   [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
+              for Security", RFC 7748, DOI 10.17487/RFC7748, January
+              2016, <http://www.rfc-editor.org/info/rfc7748>.
 
    [RFC8080]  Sury, O. and R. Edmonds, "Edwards-Curve Digital Security
               Algorithm (EdDSA) for DNSSEC", RFC 8080,
@@ -1467,7 +1476,12 @@ Internet-Draft                    NSEC5                       March 2017
               Elliptic Curve Cryptography", Version 2.0,
               <http://www.secg.org/sec1-v2.pdf>.
 
-17.2.  Informative References
+18.2.  Informative References
+
+   [I-D.gieben-nsec4]
+              Gieben, R. and M. Mekking, "DNS Security (DNSSEC)
+              Authenticated Denial of Existence", draft-gieben-nsec4-01
+              (work in progress), July 2012.
 
    [ldns-walk]
               NLNetLabs, "ldns-walk", 2015,
@@ -1493,6 +1507,13 @@ Internet-Draft                    NSEC5                       March 2017
               anonion0, ., "nsec3map with John the Ripper plugin",
               <https://github.com/anonion0/nsec3map>.
 
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 27]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    [nsec3walker]
               Bernstein, D., "Nsec3 walker",
               <http://dnscurve.org/nsec3walker.html>.
@@ -1506,13 +1527,6 @@ Internet-Draft                    NSEC5                       March 2017
               Naor, M., Reyzin, L., and S. Goldberg, "Can NSEC5 be
               Practical for DNSSEC Deployments?", in ePrint Cryptology
               Archive 2017/099, <https://eprint.iacr.org/2017/099.pdf>.
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 27]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
    [RFC6781]  Kolkman, O., Mekking, W., and R. Gieben, "DNSSEC
               Operational Practices, Version 2", RFC 6781,
@@ -1547,6 +1561,15 @@ Appendix A.  RSA Full Domain Hash Algorithm
    I2OSP -  Coversion of a nonnegative integer to an octet string as
       defined in Section 4.1 of [RFC3447]
 
+
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 28]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    OS2IP -  Coversion of an octet string to a nonnegative integer as
       defined in Section 4.2 of [RFC3447]
 
@@ -1558,17 +1581,6 @@ Appendix A.  RSA Full Domain Hash Algorithm
 
    MGF1 -  Mask Generation Function based on a hash function as defined
       in Section B.2.1 of [RFC3447]
-
-
-
-
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 28]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
 A.1.  FDH signature
 
@@ -1602,6 +1614,18 @@ A.2.  FDH verification
 
    Input:
 
+
+
+
+
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 29]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
      (n, e) - RSA public key
 
      M - message whose signature is to be verified, an octet string
@@ -1617,14 +1641,6 @@ A.2.  FDH verification
    1.  s = OS2IP(S)
 
    2.  m = RSAVP1((n, e), s)
-
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 29]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
    3.  EM = I2OSP(m, k - 1)
 
@@ -1659,6 +1675,13 @@ Appendix B.  Elliptic Curve VRF
 
    || -  octet string concatenation
 
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 30]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    p^k -  EC point multiplication
 
    p1*p2 -  EC point addition
@@ -1670,17 +1693,6 @@ Appendix B.  Elliptic Curve VRF
 
    OS2ECP -  octet string to EC point conversion with point compression
       as specified in Section 2.3.4 of [SECG1]
-
-
-
-
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 30]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
 B.1.  ECVRF Hash To Curve
 
@@ -1715,6 +1727,17 @@ B.1.  ECVRF Hash To Curve
 
    7.  Output h
 
+
+
+
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 31]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
 B.2.  ECVRF Auxiliary Functions
 
 B.2.1.  ECVRF Hash Points
@@ -1730,13 +1753,6 @@ B.2.1.  ECVRF Hash Points
      h - hash value, integer between 0 and 2^128-1
 
    Steps:
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 31]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
    1.  P = ""
 
@@ -1770,6 +1786,14 @@ B.2.2.  ECVRF Proof To Hash
    the hash can be retrieved from an encoded gamma simply by omitting
    the first octet of the gamma.
 
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 32]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
 B.2.3.  ECVRF Decode Proof
 
    ECVRF_decode_proof(pi)
@@ -1785,14 +1809,6 @@ B.2.3.  ECVRF Decode Proof
      c - integer between 0 and 2^128-1
 
      s - integer between 0 and 2^256-1
-
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 32]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
    Steps:
 
@@ -1826,6 +1842,14 @@ B.3.  ECVRF Signing
 
    Steps:
 
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 33]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    1.  h = ECVRF_hash_to_curve(alpha)
 
    2.  gamma = h^x
@@ -1841,14 +1865,6 @@ B.3.  ECVRF Signing
    7.  beta = h2(gamma)
 
    8.  Output pi and beta
-
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 33]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
 B.4.  ECVRF Verification
 
@@ -1882,6 +1898,14 @@ B.4.  ECVRF Verification
 
    6.  beta = ECVRF_proof_to_hash(gamma)
 
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 34]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    7.  If c and c' are the same, output "valid signature"; else output
        "invalid signature".  Output beta.
 
@@ -1898,13 +1922,6 @@ Appendix C.  Change Log
    00 -  fix NSEC5KEY rollover mechanism, clarify NSEC5PROOF RDATA,
       clarify inputs and outputs for NSEC5 proof and NSEC5 hash
       computation
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 34]
-
-Internet-Draft                    NSEC5                       March 2017
-
 
    01 -  added Performance Considerations section
 
@@ -1937,6 +1954,14 @@ Appendix D.  Open Issues
        appear (unlikely).  We would have to drop the signing key and
        generate a new one.  Which cannot be done instantly.
 
+
+
+
+Vcelak, et al.          Expires September 6, 2017              [Page 35]
+
+Internet-Draft                    NSEC5                       March 2017
+
+
    4.  Write Special Considerations section.
 
    5.  Contributor list has to be completed.
@@ -1952,20 +1977,10 @@ Authors' Addresses
    Email: jan.vcelak@nic.cz
 
 
-
-
-
-
-
-Vcelak, et al.          Expires September 6, 2017              [Page 35]
-
-Internet-Draft                    NSEC5                       March 2017
-
-
    Sharon Goldberg
    Boston University
    111 Cummington St, MCS135
-   Boston,  MA 02215
+   Boston  MA 02215
    USA
 
    Email: goldbe@cs.bu.edu
@@ -1974,7 +1989,7 @@ Internet-Draft                    NSEC5                       March 2017
    Dimitrios Papadopoulos
    Boston University
    111 Cummington St, MCS135
-   Boston,  MA 02215
+   Boston  MA 02215
    USA
 
    Email: dipapado@bu.edu
@@ -1983,25 +1998,10 @@ Internet-Draft                    NSEC5                       March 2017
    Shumon Huque
    Salesforce
    2550 Wasser Terr
-   Herndon,  VA 20171
+   Herndon  VA 20171
    USA
 
    Email: shuque@gmail.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
