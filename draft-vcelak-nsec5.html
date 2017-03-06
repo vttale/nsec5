@@ -596,12 +596,9 @@
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#rationale" id="rationale">Rationale</a></h1>
 <p id="rfc.section.1.1.p.1">NSEC5 provides an alternative mechanism authenticated denial of existence for the DNS Security Extensions (DNSSEC). NSEC5 has two key security properties.</p>
 <p id="rfc.section.1.1.p.2">First, NSEC5 protects the integrity of the zone contents even if an adversary compromises one of the authoritative nameservers for the zone.</p>
-<p id="rfc.section.1.1.p.3">Second, NSEC5 prevents offline zone enumeration, where an adversary makes a small number of online DNS queries and then processes them offline in order to learn all the names in a zone. Zone enumeration can be used to identify routers, servers or other "things" that could then be targeted in more complex attacks. An enumerated zone can also be a source of probable e-mail addresses for spam, or as a "key for multiple WHOIS queries to reveal registrant data that many registries may have legal obligations to protect"<a href="#RFC5155">[RFC5155]</a>.</p>
+<p id="rfc.section.1.1.p.3">Second, NSEC5 prevents offline zone enumeration, where an adversary makes a small number of online DNS queries and then processes them offline in order to learn all the names in a zone. Zone enumeration can be used to identify routers, servers or other "things" that could then be targeted in more complex attacks. An enumerated zone can also be a source of probable e-mail addresses for spam, or as a "key for multiple WHOIS queries to reveal registrant data that many registries may have legal obligations to protect" <a href="#RFC5155">[RFC5155]</a>.</p>
 <p id="rfc.section.1.1.p.4">All other DNSSEC mechanisms for authenticated denial of existence either fail to preserve integrity against a compromised nameserver, or fail to prevent offline zone enumeration.  See the summary below.</p>
-<div id="rfc.table.1"/>
-<div id="denial-mechanisms"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
-  <caption>Comparison of Denial Mechanism</caption>
   <thead>
     <tr>
       <th class="center">Scheme</th>
@@ -617,6 +614,13 @@
       <td class="right">NO</td>
       <td class="right">NO</td>
       <td class="right">YES</td>
+      <td class="right">NO</td>
+    </tr>
+    <tr>
+      <td class="center">NSEC</td>
+      <td class="right">YES</td>
+      <td class="right">YES</td>
+      <td class="right">NO</td>
       <td class="right">NO</td>
     </tr>
     <tr>
@@ -643,7 +647,7 @@
   </tbody>
 </table>
 <p id="rfc.section.1.1.p.5">When offline signing with NSEC is used <a href="#RFC4034">[RFC4034]</a>, an NSEC chain of all existing domain names in the zone is constructed. The chain is made of RRs, where each RR represents two consecutive domain names in canonical order present in the zone. The NSEC RRs are signed offline.  Non-existence of a name is proven by presenting a (precomputed) signed NSEC RR which covers the name. Because the authoritative nameserver need not know the private zone-signing key, the integrity of the zone is ensured even if an adversary compromises the authoritative nameserver.</p>
-<p id="rfc.section.1.1.p.6">On the other hand, the NSEC chain allows for easy enumeration of the zone's contents by sequentially querying for the names immediately following those in the most-recently retrieved NSEC record. N queries suffice to enumerate a zone containing N names.  Several publicly available network reconnaissance tools use NSEC records to launch zone-enumeration attacks (e.g., <a href="#nmap-nsec-enum">[nmap-nsec-enum]</a> <a href="#nsec3map">[nsec3map]</a> <a href="#ldns-walk">[ldns-walk]</a>).</p>
+<p id="rfc.section.1.1.p.6">On the other hand, the NSEC chain allows for easy enumeration of the zone's contents by sequentially querying for the names immediately following those in the most-recently retrieved NSEC record. N queries suffice to enumerate a zone containing N names.  Several publicly available network reconnaissance tools use NSEC records to launch zone-enumeration attacks (e.g., <a href="#nmap-nsec-enum">[nmap-nsec-enum]</a> <a href="#nsec3map">[nsec3map]</a> <a href="#ldns-walk">[ldns-walk]</a>.</p>
 <p id="rfc.section.1.1.p.7">When offline signing with NSEC3 is used, the original domain names in the NSEC chain are replaced by their cryptographic hashes. Offline signing ensures that NSEC provides integrity even in the face of a compromised nameserver. NSEC3 makes offline zone enumeration attacks more difficult but not impossible.  Dictionary attacks on offline signing with NSEC3 have been demonstrated (<a href="#nsec3walker">[nsec3walker]</a>, <a href="#nsec3gpu">[nsec3gpu]</a>), and available as part of network reconnaissance tools (<a href="#nmap-nsec3-enum">[nmap-nsec3-enum]</a>, <a href="#nsec3map">[nsec3map]</a>).</p>
 <p id="rfc.section.1.1.p.8">An alternative online signing approach requires the authoritative server to hold the private zone-signing key and use this key to synthesize NSEC or NSEC3 responses on the fly. When online signing with NSEC3 White Lies (NSEC3-WL) <a href="#RFC7129">[RFC7129]</a> is used, the synthesized NSEC3 record containing a pair of hash values, where the first is hash of query minus one, and the second is the hash of the query plus one. A similar approach is used in online signing with Minimally-Covering NSEC records <a href="#RFC7129">[RFC7129]</a>. Both approaches prevent offline zone enumeration because the synthesized NSEC or NSEC3 record only contains information about the queried name, and does not contain information about names that are present in the zone.  However, both approaches fail to provide integrity in the face of a compromised authoritative nameserver, because the authoritative nameserver holds the private zone-signing key.</p>
 <p id="rfc.section.1.1.p.9">To prevent offline zone enumeration while still preserving integrity against a compromised authoritative nameserver, NSEC5 replaces the unkeyed cryptographic hash function used in NSEC3 with a Verifiable Random Function (VRF) <a href="#MRV99">[MRV99]</a>.  A VRF is essentially the public-key version of a keyed cryptographic hash. The VRF comes with a public-private key pair. Only the holder of the private VRF key can compute the hash, but anyone with public VRF key can verify the correctness of the hash.</p>

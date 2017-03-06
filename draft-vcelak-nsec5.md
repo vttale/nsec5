@@ -230,7 +230,7 @@ can be used to identify routers, servers or other "things" that could
 then be targeted in more complex attacks. An enumerated zone can also
 be a source of probable e-mail addresses for spam, or as a "key for
 multiple WHOIS queries to reveal registrant data that many registries
-may have legal obligations to protect"{{!RFC5155}}.
+may have legal obligations to protect" {{!RFC5155}}.
 
 All other DNSSEC mechanisms for authenticated denial of existence
 either fail to preserve integrity against a compromised nameserver, or
@@ -239,11 +239,11 @@ fail to prevent offline zone enumeration.  See the summary below.
 | Scheme | Integrity vs network attacks? | Integrity vs compromised nameserver? | Prevents offline zone enumeration? | Online crypto? |
 |--------+-------------------------------+--------------------------------------+------------------------------------+----------------|
 | Unsigned |  NO |  NO | YES |  NO |
+| NSEC     | YES | YES |  NO |  NO |
 | NSEC3    | YES | YES |  NO |  NO |
 | NSEC3-WL | YES |  NO | YES | YES |
 | NSEC5    | YES | YES | YES | YES |
-{: #denial-mechanisms title="Comparison of Denial Mechanism"
-   cols="c r r r r" }
+{: cols="c r r r r" }
 
 When offline signing with NSEC is used {{!RFC4034}}, an NSEC chain of
 all existing domain names in the zone is constructed. The chain is
@@ -260,8 +260,8 @@ zone's contents by sequentially querying for the names immediately
 following those in the most-recently retrieved NSEC record. N queries
 suffice to enumerate a zone containing N names.  Several publicly
 available network reconnaissance tools use NSEC records to launch
-zone-enumeration attacks (e.g., <xref target="nmap-nsec-enum"/> <xref
-target="nsec3map"/> <xref target="ldns-walk"/>).
+zone-enumeration attacks (e.g., {{nmap-nsec-enum}} {{nsec3map}}
+{{ldns-walk}}.
 
 When offline signing with NSEC3 is used, the original domain names in
 the NSEC chain are replaced by their cryptographic hashes. Offline
@@ -270,7 +270,7 @@ compromised nameserver. NSEC3 makes offline zone enumeration attacks
 more difficult but not impossible.  Dictionary attacks on offline
 signing with NSEC3 have been demonstrated ({{nsec3walker}},
 {{nsec3gpu}}), and available as part of network reconnaissance tools
-(<xref target="nmap-nsec3-enum"/>, {{nsec3map}}).
+({{nmap-nsec3-enum}}, {{nsec3map}}).
 
 An alternative online signing approach requires the authoritative
 server to hold the private zone-signing key and use this key to
@@ -290,10 +290,10 @@ the private zone-signing key.
 To prevent offline zone enumeration while still preserving integrity
 against a compromised authoritative nameserver, NSEC5 replaces the
 unkeyed cryptographic hash function used in NSEC3 with a Verifiable
-Random Function (VRF) <xref target="MRV99"/>.  A VRF is essentially
-the public-key version of a keyed cryptographic hash. The VRF comes
-with a public-private key pair. Only the holder of the private VRF key
-can compute the hash, but anyone with public VRF key can verify the
+Random Function (VRF) {{MRV99}}.  A VRF is essentially the public-key
+version of a keyed cryptographic hash. The VRF comes with a
+public-private key pair. Only the holder of the private VRF key can
+compute the hash, but anyone with public VRF key can verify the
 correctness of the hash.
 
 Hashing in NSEC5 is performed with the VRF key. The public VRF key PK

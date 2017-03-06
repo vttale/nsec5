@@ -152,7 +152,7 @@ Table of Contents
    then be targeted in more complex attacks.  An enumerated zone can
    also be a source of probable e-mail addresses for spam, or as a "key
    for multiple WHOIS queries to reveal registrant data that many
-   registries may have legal obligations to protect"[RFC5155].
+   registries may have legal obligations to protect" [RFC5155].
 
    All other DNSSEC mechanisms for authenticated denial of existence
    either fail to preserve integrity against a compromised nameserver,
@@ -165,14 +165,14 @@ Table of Contents
    +----------+-------------+---------------+----------------+---------+
    | Unsigned |          NO |            NO |            YES |      NO |
    |          |             |               |                |         |
+   |   NSEC   |         YES |           YES |             NO |      NO |
+   |          |             |               |                |         |
    |  NSEC3   |         YES |           YES |             NO |      NO |
    |          |             |               |                |         |
    | NSEC3-WL |         YES |            NO |            YES |     YES |
    |          |             |               |                |         |
    |  NSEC5   |         YES |           YES |            YES |     YES |
    +----------+-------------+---------------+----------------+---------+
-
-                  Table 1: Comparison of Denial Mechanism
 
    When offline signing with NSEC is used [RFC4034], an NSEC chain of
    all existing domain names in the zone is constructed.  The chain is
@@ -190,7 +190,7 @@ Table of Contents
    queries suffice to enumerate a zone containing N names.  Several
    publicly available network reconnaissance tools use NSEC records to
    launch zone-enumeration attacks (e.g., [nmap-nsec-enum] [nsec3map]
-   [ldns-walk]).
+   [ldns-walk].
 
    When offline signing with NSEC3 is used, the original domain names in
    the NSEC chain are replaced by their cryptographic hashes.  Offline
